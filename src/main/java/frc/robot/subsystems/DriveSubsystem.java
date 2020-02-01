@@ -17,9 +17,20 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
 
 public class DriveSubsystem extends SubsystemBase {
-  DifferentialDrive m_diffDrive;
-  Encoder m_leftEncoder = new Encoder(RoboRio.DioPorts.LeftEncoderA, RoboRio.DioPorts.LeftEncoderB, false);
-  Encoder m_rightEncoder = new Encoder(RoboRio.DioPorts.RightEncoderA, RoboRio.DioPorts.RightEncoderB, false);
+
+  // Make the motor controllers class variables so they show up on LiveWindow
+  private  VictorSP rightFrontMotor = new VictorSP(RoboRio.PwmPorts.RightFrontMotor);
+  private  VictorSP rightRearMotor = new VictorSP(RoboRio.PwmPorts.RightRearMotor);      
+  private  SpeedControllerGroup rightGroup = new SpeedControllerGroup(rightFrontMotor, rightRearMotor);
+  
+  private  VictorSP leftFrontMotor = new VictorSP(RoboRio.PwmPorts.LeftFrontMotor);
+  private  VictorSP leftRearMotor = new VictorSP(RoboRio.PwmPorts.LeftRearMotor);      
+  private  SpeedControllerGroup leftGroup = new SpeedControllerGroup(leftFrontMotor, leftRearMotor);
+
+  private DifferentialDrive m_diffDrive;
+
+  private Encoder m_leftEncoder = new Encoder(RoboRio.DioPorts.LeftEncoderA, RoboRio.DioPorts.LeftEncoderB, false);
+  private Encoder m_rightEncoder = new Encoder(RoboRio.DioPorts.RightEncoderA, RoboRio.DioPorts.RightEncoderB, false);
 
   // The gyro sensor
   //private AHRS m_navx;
@@ -28,14 +39,6 @@ public class DriveSubsystem extends SubsystemBase {
    * Creates a new DriveSubsystem.
    */
   public DriveSubsystem() { 
-    VictorSP rightFrontMotor = new VictorSP(RoboRio.PwmPorts.RightFrontMotor);
-    VictorSP rightRearMotor = new VictorSP(RoboRio.PwmPorts.RightRearMotor);      
-    SpeedControllerGroup rightGroup = new SpeedControllerGroup(rightFrontMotor, rightRearMotor);
-    
-    VictorSP leftFrontMotor = new VictorSP(RoboRio.PwmPorts.LeftFrontMotor);
-    VictorSP leftRearMotor = new VictorSP(RoboRio.PwmPorts.LeftRearMotor);      
-    SpeedControllerGroup leftGroup = new SpeedControllerGroup(leftFrontMotor, leftRearMotor);
-
     m_diffDrive = new DifferentialDrive(leftGroup, rightGroup);
   
     m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
