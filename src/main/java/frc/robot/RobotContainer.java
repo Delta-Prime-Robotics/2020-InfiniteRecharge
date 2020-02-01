@@ -55,19 +55,19 @@ public class RobotContainer {
 
   private void configureDefaultCommands(){
 
-    // // Arcade Drive as default
-    // m_driveSubsystem.setDefaultCommand(
-    //   new ArcadeDriveCommand(m_driveSubsystem, 
-    //     () -> -m_gamePad.getRawAxis(GamePad.Axis.RightStick.UpDown),
-    //     () -> m_gamePad.getRawAxis(GamePad.Axis.RightStick.LeftRight))
-    // );
-
-    // Tank Drive as default
+    // Arcade Drive as default
     m_driveSubsystem.setDefaultCommand(
-      new TankDriveCommand(m_driveSubsystem, 
-        () -> -m_gamePad.getRawAxis(GamePad.Axis.LeftStick.UpDown),
-        () -> m_gamePad.getRawAxis(GamePad.Axis.RightStick.UpDown))
+      new ArcadeDriveCommand(m_driveSubsystem, 
+        () -> -m_gamePad.getRawAxis(GamePad.Axis.RightStick.UpDown),
+        () -> m_gamePad.getRawAxis(GamePad.Axis.RightStick.LeftRight))
     );
+
+    // // Tank Drive as default
+    // m_driveSubsystem.setDefaultCommand(
+    //   new TankDriveCommand(m_driveSubsystem, 
+    //     () -> -m_gamePad.getRawAxis(GamePad.Axis.LeftStick.UpDown),
+    //     () -> -m_gamePad.getRawAxis(GamePad.Axis.RightStick.UpDown))
+    // );
   }
 
   /**

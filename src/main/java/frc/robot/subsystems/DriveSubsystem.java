@@ -29,8 +29,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   private DifferentialDrive m_diffDrive;
 
-  private Encoder m_leftEncoder = new Encoder(RoboRio.DioPorts.LeftEncoderA, RoboRio.DioPorts.LeftEncoderB, false);
-  private Encoder m_rightEncoder = new Encoder(RoboRio.DioPorts.RightEncoderA, RoboRio.DioPorts.RightEncoderB, false);
+  private Encoder m_leftEncoder = new Encoder(RoboRio.DioPorts.LeftEncoderA, RoboRio.DioPorts.LeftEncoderB, DriveConstants.kLeftEncoderReversed);
+  private Encoder m_rightEncoder = new Encoder(RoboRio.DioPorts.RightEncoderA, RoboRio.DioPorts.RightEncoderB, DriveConstants.kRightEncoderReversed);
 
   // The gyro sensor
   //private AHRS m_navx;
