@@ -39,7 +39,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_diffDrive = new DifferentialDrive(leftGroup, rightGroup);
   
     m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-    m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse2);
+    m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
     
     // try {
     //   m_navx = new AHRS(SPI.Port.kMXP);
@@ -73,6 +73,10 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void arcadeDrive(double speed, double rotation) {
     m_diffDrive.arcadeDrive(speed, rotation);
+  }
+
+  public void tankDrive(double leftSpeed, double rightSpeed) {
+    m_diffDrive.tankDrive(leftSpeed, rightSpeed);
   }
 
   /**

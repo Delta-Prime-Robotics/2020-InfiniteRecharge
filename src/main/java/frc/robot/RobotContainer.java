@@ -12,8 +12,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.ArcadeDriveCommand;
-import frc.robot.subsystems.DriveSubsystem;
+
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 import static frc.robot.Constants.*;
 
@@ -28,8 +29,6 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
 
   private final Joystick m_gamePad = new Joystick(DriverStation.UsbPorts.GamePad);
-
-
 
 
   /**
@@ -55,14 +54,20 @@ public class RobotContainer {
 
 
   private void configureDefaultCommands(){
+
+    // // Arcade Drive as default
+    // m_driveSubsystem.setDefaultCommand(
+    //   new ArcadeDriveCommand(m_driveSubsystem, 
+    //     () -> -m_gamePad.getRawAxis(GamePad.Axis.RightStick.UpDown),
+    //     () -> m_gamePad.getRawAxis(GamePad.Axis.RightStick.LeftRight))
+    // );
+
+    // Tank Drive as default
     m_driveSubsystem.setDefaultCommand(
-      new ArcadeDriveCommand(m_driveSubsystem, 
-        () -> -m_gamePad.getRawAxis(GamePad.Axis.RightStick.UpDown),
-        () -> m_gamePad.getRawAxis(GamePad.Axis.RightStick.LeftRight))
+      new TankDriveCommand(m_driveSubsystem, 
+        () -> -m_gamePad.getRawAxis(GamePad.Axis.LeftStick.UpDown),
+        () -> m_gamePad.getRawAxis(GamePad.Axis.RightStick.UpDown))
     );
-
-    
-
   }
 
   /**

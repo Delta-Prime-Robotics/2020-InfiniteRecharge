@@ -62,12 +62,12 @@ public final class Constants {
         public static final boolean kRightEncoderReversed = true;
         
         public static final int kEncoderCPR = 2048;
-        public static final int kEncoderCPR2 = 2048;
+        //public static final int kEncoderCPR2 = 2048;
         public static final double kWheelDiameterInches = 6;
         public static final double kEncoderDistancePerPulse = 
             (kWheelDiameterInches * Math.PI) / (double) kEncoderCPR;
-        public static final double kEncoderDistancePerPulse2 = 
-            (kWheelDiameterInches * Math.PI) / (double) kEncoderCPR2;
+        // public static final double kEncoderDistancePerPulse2 = 
+        //     (kWheelDiameterInches * Math.PI) / (double) kEncoderCPR2;
             // Assumes the encoders are mounted directly on the wheel shafts
 
         public static final boolean kGyroReversed = false;
@@ -82,6 +82,5 @@ public final class Constants {
 
         public static final double kMaxTurnRateDegPerS = 100;
         public static final double kMaxTurnAccelDegPerSSquared = 300;    }
-
 }
 
