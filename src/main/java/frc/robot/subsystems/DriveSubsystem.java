@@ -10,6 +10,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,8 +30,14 @@ public class DriveSubsystem extends SubsystemBase {
 
   private DifferentialDrive m_diffDrive;
 
-  private Encoder m_leftEncoder = new Encoder(RoboRio.DioPorts.LeftEncoderA, RoboRio.DioPorts.LeftEncoderB, DriveConstants.kLeftEncoderReversed);
-  private Encoder m_rightEncoder = new Encoder(RoboRio.DioPorts.RightEncoderA, RoboRio.DioPorts.RightEncoderB, DriveConstants.kRightEncoderReversed);
+  private Encoder m_leftEncoder = new Encoder(RoboRio.DioPorts.LeftEncoderA, 
+                                              RoboRio.DioPorts.LeftEncoderB, 
+                                              DriveConstants.kLeftEncoderReversed,
+                                              EncodingType.k4X);
+  private Encoder m_rightEncoder = new Encoder(RoboRio.DioPorts.RightEncoderA, 
+                                              RoboRio.DioPorts.RightEncoderB, 
+                                              DriveConstants.kRightEncoderReversed,
+                                              EncodingType.k4X);
 
   // The gyro sensor
   //private AHRS m_navx;
@@ -40,9 +47,10 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public DriveSubsystem() { 
     m_diffDrive = new DifferentialDrive(leftGroup, rightGroup);
-  
+    
     m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
     m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
+    
     
     // try {
     //   m_navx = new AHRS(SPI.Port.kMXP);
@@ -55,8 +63,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Left Encoder Distance", m_leftEncoder.getDistance());
-    SmartDashboard.putNumber("Right Encoder Distance", m_rightEncoder.getDistance());
+    SmartDashboard.putNumber("Left Encoder Distance", m_leftEncoder.getRaw());
+    SmartDashboard.putNumber("Right Encoder Distance", m_rightEncoder.getRaw());
+    SmartDashboard.putNumber("Garbage Number", 11.4);
     // This method will be called once per scheduler run
     // SmartDashboard.putNumber("Gyro Heading", getHeading());
   }
