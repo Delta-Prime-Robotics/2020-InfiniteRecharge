@@ -38,7 +38,7 @@ public class PowerPortPipeline implements VisionPipeline {
 		private static final double FilterContoursMinRatio = 0.0;
   }
   
-  private boolean m_suspendProcessing;
+  private boolean m_suspendProcessing = true;
 
   //Outputs
   private Mat m_resizeImageOutput = new Mat();  

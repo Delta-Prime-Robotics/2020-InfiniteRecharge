@@ -56,8 +56,7 @@ public class CameraSubsystem extends SubsystemBase {
 
     m_outputStream = CameraServer.getInstance().putVideo("VisionCam", 320, 240);
     
-    setUpShuffleboard();
-
+    m_suspendProcessing = true;
     startVisionThread();
   }
 
@@ -148,7 +147,10 @@ public class CameraSubsystem extends SubsystemBase {
 
   }
 
-  private void setUpShuffleboard() {
+  /**
+   * Set up the shuffleboard tab for this subsystem
+   */
+  public void setUpShuffleboard(ShuffleboardTab drivingTab) {
     ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
 
     ShuffleboardLayout targetInfo = visionTab.getLayout("Target Info");

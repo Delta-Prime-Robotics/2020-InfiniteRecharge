@@ -11,10 +11,9 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -64,13 +63,19 @@ public class DriveSubsystem extends SubsystemBase {
     catch (RuntimeException ex) {
       DriverStation.reportError("Error instantiating navX MSP: " + ex.getMessage(), true);
     }
+  }
+
+  /**
+   * 
+   */
+  public void setUpShuffleboard(ShuffleboardTab drivingTab) {
 
     if (m_navx != null) {
-      Shuffleboard.getTab("Driving").add(m_navx);
+      drivingTab.add(m_navx);
     }
     
-    Shuffleboard.getTab("Driving").add("Left Encoder", m_leftEncoder);
-    Shuffleboard.getTab("Driving").add("Right Encoder", m_rightEncoder);
+    drivingTab.add("Left Encoder", m_leftEncoder);
+    drivingTab.add("Right Encoder", m_rightEncoder);
   }
 
   @Override

@@ -11,6 +11,8 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -42,8 +44,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-
+    // Configure default commands
     configureDefaultCommands();
+    // Set up Shuffleboard for the robot
+    setUpShuffleboard();
 
     // Remove this once we hook up the CameraSubsystem
     CameraServer.getInstance().startAutomaticCapture();
@@ -80,6 +84,15 @@ public class RobotContainer {
     //     () -> -m_gamePad.getRawAxis(GamePad.Axis.LeftStick.UpDown),
     //     () -> -m_gamePad.getRawAxis(GamePad.Axis.RightStick.UpDown))
     // );
+  }
+
+  private void setUpShuffleboard() {
+    // The main tab while driving. Each subsystem may have its own tab too
+    ShuffleboardTab drivingTab = Shuffleboard.getTab("Driving");
+    Shuffleboard.selectTab("Driving");
+
+    m_driveSubsystem.setUpShuffleboard(drivingTab);
+
   }
 
   /**
