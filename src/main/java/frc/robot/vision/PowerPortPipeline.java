@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Moments;
 
 import edu.wpi.first.vision.VisionPipeline;
 
@@ -93,6 +94,44 @@ public class PowerPortPipeline implements VisionPipeline {
       filterContoursMinArea, filterContoursMinPerimeter, filterContoursMinWidth, filterContoursMinHeight, 
       filterContoursSolidity, filterContoursMinVertices, filterContoursMinRatio, 
       m_filterContoursOutput);
+  }
+
+  /**
+   * Find a rotated rectangle of the minimum area enclosing contour
+   * @param contour 
+   * @return the rotated rectangle
+   */
+  public RotatedRect findMinAreaRect(MatOfPoint contour) {
+    MatOfPoint2f mop2f = new MatOfPoint2f();
+    contour.convertTo(mop2f, CvType.CV_32F);
+    return Imgproc.minAreaRect(mop2f);
+  }
+
+  /**
+   * Find the center of the provided contour
+   * @param contour The contour to find the center of
+   * @return The coordinates to the center of the contour
+   */
+  public Point findCenter(MatOfPoint contour) {
+    // Try computing the center of the contour using image moments
+    // (see OpenCV or https://en.wikipedia.org/wiki/Image_moment for more info on moments)
+    Moments m = Imgproc.moments(contour);
+    double centerX = (m.m10 / m.m00);
+    double centerY = (m.m01 / m.m00);
+
+    return new Point(centerX, centerY);
+  }
+
+  /**
+   * Find the offset between the center of the image and a point
+   * @param point the point that is offset from the center
+   * @return The difference in x & y from the center of the image to the specified point
+   */
+  public Point findOffset(Point point) {
+    double offsetX = point.x - (VisionConstants.ImageWidth / 2);
+    double offsetY = point.y - (VisionConstants.ImageHeight / 2);
+
+    return new Point(offsetX, offsetY);
   }
 
   /**
@@ -194,7 +233,7 @@ public class PowerPortPipeline implements VisionPipeline {
     double[] solidity, double minVertexCount, double minRatio, 
     List<MatOfPoint> output) {
 
-		final MatOfInt hull = new MatOfInt();
+    final MatOfInt hull = new MatOfInt();
     output.clear();
     
 		//operation
@@ -230,7 +269,8 @@ public class PowerPortPipeline implements VisionPipeline {
 			final double ratio = bb.width / (double)bb.height;
       if (ratio < minRatio) continue;
       
-      // ToDo: Filter by Convex (includes calculating centroid)
+      // Filter be Concavity
+      if (Imgproc.isContourConvex(contour)) continue;
 
 			output.add(contour);
     }

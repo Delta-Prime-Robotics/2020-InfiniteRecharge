@@ -27,9 +27,13 @@ import static frc.robot.Constants.*;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  @SuppressWarnings("unused") //The PDP subsystem is intentionally unused, it just displays PDP data
+  private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  //private final CameraSubsystem m_cameraSubsystem = new CameraSubsystem();
 
-  private final Joystick m_gamePad = new Joystick(DriverStation.UsbPorts.GamePad);
+  // OI controllers are defined here...
+  private final Joystick m_gamePad = new Joystick(Laptop.UsbPorts.GamePad);
 
 
   /**
@@ -41,6 +45,7 @@ public class RobotContainer {
 
     configureDefaultCommands();
 
+    // Remove this once we hook up the CameraSubsystem
     CameraServer.getInstance().startAutomaticCapture();
   }
 
@@ -55,17 +60,21 @@ public class RobotContainer {
       .whenPressed(() -> m_driveSubsystem.resetEncoders());
   }
 
-
+  /**
+   * Use this method to set the default commands for subsystems
+   * Default commands can be explicit command classes, inline or use one of the
+   * "convenience" subclasses of command (e.g. {@link edu.wpi.first.wpilibj2.command.InstantCommand})
+   */
   private void configureDefaultCommands(){
 
-    // Arcade Drive as default
+    // Set Arcade Drive as default
     m_driveSubsystem.setDefaultCommand(
       new ArcadeDriveCommand(m_driveSubsystem, 
         () -> -m_gamePad.getRawAxis(GamePad.Axis.RightStick.UpDown),
         () -> m_gamePad.getRawAxis(GamePad.Axis.RightStick.LeftRight))
     );
 
-    // // Tank Drive as default
+    // // Set Tank Drive as default
     // m_driveSubsystem.setDefaultCommand(
     //   new TankDriveCommand(m_driveSubsystem, 
     //     () -> -m_gamePad.getRawAxis(GamePad.Axis.LeftStick.UpDown),
