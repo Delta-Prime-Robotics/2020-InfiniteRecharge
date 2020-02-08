@@ -11,6 +11,8 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -27,9 +29,13 @@ import static frc.robot.Constants.*;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  @SuppressWarnings("unused") //The PDP subsystem is intentionally unused, it just displays PDP data
+  private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  //private final CameraSubsystem m_cameraSubsystem = new CameraSubsystem();
 
-  private final Joystick m_gamePad = new Joystick(DriverStation.UsbPorts.GamePad);
+  // OI controllers are defined here...
+  private final Joystick m_gamePad = new Joystick(Laptop.UsbPorts.GamePad);
 
 
   /**
@@ -38,9 +44,12 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-
+    // Configure default commands
     configureDefaultCommands();
+    // Set up Shuffleboard for the robot
+    setUpShuffleboard();
 
+    // Remove this once we hook up the CameraSubsystem
     CameraServer.getInstance().startAutomaticCapture();
   }
 
@@ -63,22 +72,35 @@ public class RobotContainer {
 
   }
 
-
+  /**
+   * Use this method to set the default commands for subsystems
+   * Default commands can be explicit command classes, inline or use one of the
+   * "convenience" subclasses of command (e.g. {@link edu.wpi.first.wpilibj2.command.InstantCommand})
+   */
   private void configureDefaultCommands(){
 
-    // Arcade Drive as default
+    // Set Arcade Drive as default
     m_driveSubsystem.setDefaultCommand(
       new ArcadeDriveCommand(m_driveSubsystem,
       () -> -m_gamePad.getRawAxis(GamePad.Axis.LeftStick.UpDown)/1.5,
       () -> m_driveSubsystem.turnscale())
     );
 
-    // // Tank Drive as default
+    // // Set Tank Drive as default
     // m_driveSubsystem.setDefaultCommand(
     //   new TankDriveCommand(m_driveSubsystem, 
     //     () -> -m_gamePad.getRawAxis(GamePad.Axis.LeftStick.UpDown),
     //     () -> -m_gamePad.getRawAxis(GamePad.Axis.RightStick.UpDown))
     // );
+  }
+
+  private void setUpShuffleboard() {
+    // The main tab while driving. Each subsystem may have its own tab too
+    ShuffleboardTab drivingTab = Shuffleboard.getTab("Driving");
+    Shuffleboard.selectTab("Driving");
+
+    m_driveSubsystem.setUpShuffleboard(drivingTab);
+
   }
 
   /**

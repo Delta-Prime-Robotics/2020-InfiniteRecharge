@@ -7,15 +7,20 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.VictorSP;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.*;
+
 
 public class DriveSubsystem extends SubsystemBase {
 
@@ -38,10 +43,8 @@ public class DriveSubsystem extends SubsystemBase {
                                               RoboRio.DioPorts.RightEncoderB, 
                                               DriveConstants.kRightEncoderReversed,
                                               EncodingType.k4X);
-                                        
- // The gyro sensor
- //private AHRS m_navx;
- 
+  // The gyro sensor
+  private AHRS m_navx;
 
   /**
    * Creates a new DriveSubsystem.
@@ -53,20 +56,33 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
     
     
-    // try {
-    //   m_navx = new AHRS(SPI.Port.kMXP);
-    // }
-    // catch (RuntimeException ex) {
-    //   DriverStation.reportError("Error instantiating navX MSP: " + ex.getMessage(), true);
-    // }
+    try {
+      m_navx = new AHRS(SPI.Port.kMXP);
+    }
+    catch (RuntimeException ex) {
+      DriverStation.reportError("Error instantiating navX MSP: " + ex.getMessage(), true);
+    }
+  }
 
+  /**
+   * 
+   */
+  public void setUpShuffleboard(ShuffleboardTab drivingTab) {
+
+    if (m_navx != null) {
+      drivingTab.add(m_navx);
+    }
+    
+    drivingTab.add("Left Encoder", m_leftEncoder);
+    drivingTab.add("Right Encoder", m_rightEncoder);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Left Encoder Distance", m_leftEncoder.getDistance());
-    SmartDashboard.putNumber("Right Encoder Distance", m_rightEncoder.getDistance());
     // This method will be called once per scheduler run
+    // SmartDashboard.putNumber("Left Encoder Distance", m_leftEncoder.getRaw());
+    // SmartDashboard.putNumber("Right Encoder Distance", m_rightEncoder.getRaw());
+    // SmartDashboard.putNumber("Garbage Number", 11.4);
     // SmartDashboard.putNumber("Gyro Heading", getHeading());
   }
 
@@ -137,9 +153,9 @@ public class DriveSubsystem extends SubsystemBase {
     return m_rightEncoder.getDistance();
   }
 
-  // public double getAverageEncoderDistance() {
-  //   return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
-  // }
+  public double getAverageEncoderDistance() {
+    return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
+  }
 
   public double turnscale(){
     double rate= leftDistance()-rightDistance();
@@ -154,21 +170,21 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Resets the gyro heading to zero
    */
-  // public void zeroHeading() {
-  //   m_navx.reset();
-  // }
+  public void zeroHeading() {
+    m_navx.reset();
+  }
 
-  // /**
-  //  * Returns the heading from the gyro
-  //  * @return the robot's heading in degrees, from +180 to -180
-  //  */
-  // public double getHeading() {
-  //   return Math.IEEEremainder(m_navx.getAngle(), 360) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
-  // }
+  /**
+   * Returns the heading from the gyro
+   * @return the robot's heading in degrees, from +180 to -180
+   */
+  public double getHeading() {
+    return Math.IEEEremainder(m_navx.getAngle(), 360) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+  }
 
-  // public double getTurnRate() {
-  //   return m_navx.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
-  // }
+  public double getTurnRate() {
+    return m_navx.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+  }
 }
 
 

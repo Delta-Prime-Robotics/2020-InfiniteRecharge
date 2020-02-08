@@ -24,7 +24,7 @@ public final class Constants {
         }
     }
 
-    public static final class DriverStation {
+    public static final class Laptop {
         public final class UsbPorts {
             public static final int GamePad = 2;
         }
