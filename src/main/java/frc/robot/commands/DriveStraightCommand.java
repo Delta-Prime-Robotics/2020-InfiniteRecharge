@@ -19,7 +19,7 @@ public class DriveStraightCommand extends CommandBase {
   /**
    * Creates a new DriveStraightCommand.
    */
-  public DriveStraightCommand(DriveSubsystem subsystem, DoubleSupplier forward, DoubleSupplier rotation) {
+  public DriveStraightCommand(DriveSubsystem subsystem, DoubleSupplier forward) {
     m_drive = subsystem;
     m_forward = forward;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -29,6 +29,7 @@ public class DriveStraightCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_drive.initDriveStraight();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

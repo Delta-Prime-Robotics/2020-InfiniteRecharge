@@ -42,6 +42,8 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    m_driveSubsystem.setMaxOutput(0.75);
+
     // Configure the button bindings
     configureButtonBindings();
     // Configure default commands
@@ -69,6 +71,9 @@ public class RobotContainer {
     // new JoystickButton(m_gamePad, GamePad.Buttons.B)
     // .whenInactive(() ->m_driveSubsystem.m_driveStraight = false);
 
+    new JoystickButton(m_gamePad, GamePad.Buttons.LB)
+      .whenHeld(new DriveStraightCommand(m_driveSubsystem, 
+        () -> m_gamePad.getRawAxis(GamePad.Axis.LeftStick.UpDown)));
 
   }
 
@@ -82,8 +87,8 @@ public class RobotContainer {
     // Set Arcade Drive as default
     m_driveSubsystem.setDefaultCommand(
       new ArcadeDriveCommand(m_driveSubsystem,
-      () -> -m_gamePad.getRawAxis(GamePad.Axis.LeftStick.UpDown)/1.5,
-      () -> m_driveSubsystem.turnscale())
+      () -> -m_gamePad.getRawAxis(GamePad.Axis.LeftStick.UpDown),
+      () -> m_gamePad.getRawAxis(GamePad.Axis.LeftStick.LeftRight))
     );
 
     // // Set Tank Drive as default
@@ -95,12 +100,11 @@ public class RobotContainer {
   }
 
   private void setUpShuffleboard() {
-    // The main tab while driving. Each subsystem may have its own tab too
-    ShuffleboardTab drivingTab = Shuffleboard.getTab("Driving");
-    Shuffleboard.selectTab("Driving");
+    // The main tab during teleop. Each subsystem may have its own tab too
+    ShuffleboardTab teleopTab = Shuffleboard.getTab("Teleop");
+    Shuffleboard.selectTab("Teleop");
 
-    m_driveSubsystem.setUpShuffleboard(drivingTab);
-
+    m_driveSubsystem.setUpShuffleboard(teleopTab);
   }
 
   /**

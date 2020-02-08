@@ -11,6 +11,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
@@ -67,14 +68,17 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * 
    */
-  public void setUpShuffleboard(ShuffleboardTab drivingTab) {
+  public void setUpShuffleboard(ShuffleboardTab teleopTab) {
+    ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
 
     if (m_navx != null) {
-      drivingTab.add(m_navx);
+      driveTab.add(m_navx);
     }
     
-    drivingTab.add("Left Encoder", m_leftEncoder);
-    drivingTab.add("Right Encoder", m_rightEncoder);
+    driveTab.add("Left Encoder", m_leftEncoder);
+    driveTab.add("Right Encoder",m_rightEncoder);
+
+    driveTab.addNumber("turnScale Value", () -> this.turnScale());
   }
 
   @Override
@@ -112,13 +116,22 @@ public class DriveSubsystem extends SubsystemBase {
     m_diffDrive.tankDrive(leftSpeed, rightSpeed);
   }
 
-  
   /**
-   * Drives the robot forward
+   * Initialize drive straight
+   * (either encoder or gyro depending on how we're driving straight)
+   */
+  public void initDriveStraight() {
+    this.resetEncoders();
+  }
+  /**
+   * Drives the robot in a straight line
    * @param forward the forward movement speed
    */
   public void driveStraight(double forward) {
-    m_diffDrive.arcadeDrive(forward, 0);
+    double rotation = 0;
+    // Calculate the rotation to keep the robot going straight
+
+    m_diffDrive.arcadeDrive(forward, rotation);
   }
 
   /**
@@ -139,31 +152,38 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Get the distance from the Left Encoder
-   * @return
+   * Get the distance from the left encoder
    */
   public double leftDistance() {
     return m_leftEncoder.getDistance();    
   }
 
   /**
-   * Get the distance reading from the Right Encoder
+   * Get the distance reading from the right encoder
    */
   public double rightDistance() {
     return m_rightEncoder.getDistance();
   }
 
+  /**
+   * Get the average distance from the two encoders
+   */
   public double getAverageEncoderDistance() {
     return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
   }
 
-  public double turnscale(){
-    double rate= leftDistance()-rightDistance();
+  /**
+   * @return rate of turn for 
+   */
+  public double turnScale(){
+    double rate = leftDistance()-rightDistance();
     if (rate == 0.0)
       return rate;
-    double sign = rate/java.lang.Math.abs(rate);
-    if (java.lang.Math.abs(rate)>10)
+
+    double sign = rate/Math.abs(rate);
+    if (Math.abs(rate)>10)
       return sign*0.1;
+
     return rate/100.0;
   }
 
@@ -175,13 +195,15 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * Returns the heading from the gyro
-   * @return the robot's heading in degrees, from +180 to -180
+   * @return the heading from the gyro in degrees, from +180 to -180
    */
   public double getHeading() {
     return Math.IEEEremainder(m_navx.getAngle(), 360) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
+  /**
+   * @return the rate of turn from the gyro
+   */
   public double getTurnRate() {
     return m_navx.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }

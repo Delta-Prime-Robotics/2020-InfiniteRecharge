@@ -46,10 +46,10 @@ public final class Constants {
             public static final int A = 2;
             public static final int B = 3;
             public static final int Y = 4;
-            // public static final int LB = 5;
-            // public static final int RB = 6;
-            // public static final int LT = 7;
-            // public static final int RT = 8;
+            public static final int LB = 5;
+            public static final int RB = 6;
+            public static final int LT = 7;
+            public static final int RT = 8;
             // public static final int Back = 9;
             // public static final int Start = 10;
             // public static final int LeftJoyStickClick = 11;
@@ -62,13 +62,9 @@ public final class Constants {
         public static final boolean kRightEncoderReversed = false;
         
         public static final int kEncoderCPR = 100;
-        //public static final int kEncoderCPR2 = 2048;
         public static final double kWheelDiameterInches = 6;
         public static final double kEncoderDistancePerPulse = 
             (kWheelDiameterInches * Math.PI) / (double) kEncoderCPR;
-        // public static final double kEncoderDistancePerPulse2 = 
-        //     (kWheelDiameterInches * Math.PI) / (double) kEncoderCPR2;
-            // Assumes the encoders are mounted directly on the wheel shafts
 
         public static final boolean kGyroReversed = false;
 
