@@ -51,8 +51,16 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(m_gamePad, GamePad.Buttons.A)
-      .whenPressed(() -> m_driveSubsystem.resetEncoders());
+    // new JoystickButton(m_gamePad, GamePad.Buttons.B)
+    // .whileHeld(() ->m_driveSubsystem.m_driveStraight = true);
+   
+    // new JoystickButton(m_gamePad, GamePad.Buttons.A)
+    //   .whenPressed(() -> m_driveSubsystem.resetEncoders());
+
+    // new JoystickButton(m_gamePad, GamePad.Buttons.B)
+    // .whenInactive(() ->m_driveSubsystem.m_driveStraight = false);
+
+
   }
 
 
@@ -60,9 +68,9 @@ public class RobotContainer {
 
     // Arcade Drive as default
     m_driveSubsystem.setDefaultCommand(
-      new ArcadeDriveCommand(m_driveSubsystem, 
-        () -> -m_gamePad.getRawAxis(GamePad.Axis.RightStick.UpDown),
-        () -> m_gamePad.getRawAxis(GamePad.Axis.RightStick.LeftRight))
+      new ArcadeDriveCommand(m_driveSubsystem,
+      () -> -m_gamePad.getRawAxis(GamePad.Axis.LeftStick.UpDown)/1.5,
+      () -> m_driveSubsystem.turnscale())
     );
 
     // // Tank Drive as default

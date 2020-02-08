@@ -38,9 +38,10 @@ public class DriveSubsystem extends SubsystemBase {
                                               RoboRio.DioPorts.RightEncoderB, 
                                               DriveConstants.kRightEncoderReversed,
                                               EncodingType.k4X);
-
-  // The gyro sensor
-  //private AHRS m_navx;
+                                        
+ // The gyro sensor
+ //private AHRS m_navx;
+ 
 
   /**
    * Creates a new DriveSubsystem.
@@ -63,9 +64,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Left Encoder Distance", m_leftEncoder.getRaw());
-    SmartDashboard.putNumber("Right Encoder Distance", m_rightEncoder.getRaw());
-    SmartDashboard.putNumber("Garbage Number", 11.4);
+    SmartDashboard.putNumber("Left Encoder Distance", m_leftEncoder.getDistance());
+    SmartDashboard.putNumber("Right Encoder Distance", m_rightEncoder.getDistance());
     // This method will be called once per scheduler run
     // SmartDashboard.putNumber("Gyro Heading", getHeading());
   }
@@ -80,15 +80,29 @@ public class DriveSubsystem extends SubsystemBase {
   /**
    * Drives the robot using arcade controls
    * 
-   * @param speed the forward movement
+   * @param forward the forward movement speed
    * @param rotation the rate & direction to turn
    */
-  public void arcadeDrive(double speed, double rotation) {
-    m_diffDrive.arcadeDrive(speed, rotation);
+  public void arcadeDrive(double forward, double rotation) {
+    m_diffDrive.arcadeDrive(forward, rotation);
   }
 
+  /**
+   * Drives the robot using tank controls
+   * @param leftSpeed the left motor speed
+   * @param rightSpeed the right motor speed
+   */
   public void tankDrive(double leftSpeed, double rightSpeed) {
     m_diffDrive.tankDrive(leftSpeed, rightSpeed);
+  }
+
+  
+  /**
+   * Drives the robot forward
+   * @param forward the forward movement speed
+   */
+  public void driveStraight(double forward) {
+    m_diffDrive.arcadeDrive(forward, 0);
   }
 
   /**
@@ -99,7 +113,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void setMaxOutput(double maxOutput) {
     m_diffDrive.setMaxOutput(maxOutput);
   }
-
+  
   /**
    * Resets the drive encoders to zero
    */
@@ -108,9 +122,34 @@ public class DriveSubsystem extends SubsystemBase {
     m_rightEncoder.reset();
   }
 
+  /**
+   * Get the distance from the Left Encoder
+   * @return
+   */
+  public double leftDistance() {
+    return m_leftEncoder.getDistance();    
+  }
+
+  /**
+   * Get the distance reading from the Right Encoder
+   */
+  public double rightDistance() {
+    return m_rightEncoder.getDistance();
+  }
+
   // public double getAverageEncoderDistance() {
   //   return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
   // }
+
+  public double turnscale(){
+    double rate= leftDistance()-rightDistance();
+    if (rate == 0.0)
+      return rate;
+    double sign = rate/java.lang.Math.abs(rate);
+    if (java.lang.Math.abs(rate)>10)
+      return sign*0.1;
+    return rate/100.0;
+  }
 
   /**
    * Resets the gyro heading to zero

@@ -61,7 +61,7 @@ public final class Constants {
         public static final boolean kLeftEncoderReversed = true;
         public static final boolean kRightEncoderReversed = false;
         
-        public static final int kEncoderCPR = 48;
+        public static final int kEncoderCPR = 100;
         //public static final int kEncoderCPR2 = 2048;
         public static final double kWheelDiameterInches = 6;
         public static final double kEncoderDistancePerPulse = 
