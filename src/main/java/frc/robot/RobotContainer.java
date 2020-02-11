@@ -32,10 +32,11 @@ public class RobotContainer {
   @SuppressWarnings("unused") //The PDP subsystem is intentionally unused, it just displays PDP data
   private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-  //private final CameraSubsystem m_cameraSubsystem = new CameraSubsystem();
+  private final CameraSubsystem m_cameraSubsystem = new CameraSubsystem();
 
   // OI controllers are defined here...
   private final Joystick m_gamePad = new Joystick(Laptop.UsbPorts.GamePad);
+  private final Joystick m_maverik = new Joystick(Laptop.UsbPorts.Joystick);
 
 
   /**
@@ -50,9 +51,6 @@ public class RobotContainer {
     configureDefaultCommands();
     // Set up Shuffleboard for the robot
     setUpShuffleboard();
-
-    // Remove this once we hook up the CameraSubsystem
-    CameraServer.getInstance().startAutomaticCapture();
   }
 
   /**
@@ -65,15 +63,15 @@ public class RobotContainer {
     // new JoystickButton(m_gamePad, GamePad.Buttons.B)
     // .whileHeld(() ->m_driveSubsystem.m_driveStraight = true);
    
-    // new JoystickButton(m_gamePad, GamePad.Buttons.A)
-    //   .whenPressed(() -> m_driveSubsystem.resetEncoders());
+     new JoystickButton(m_gamePad, GamePad.Buttons.A)
+       .whenPressed(() -> m_driveSubsystem.resetEncoders());
 
     // new JoystickButton(m_gamePad, GamePad.Buttons.B)
     // .whenInactive(() ->m_driveSubsystem.m_driveStraight = false);
 
     new JoystickButton(m_gamePad, GamePad.Buttons.LB)
       .whenHeld(new DriveStraightCommand(m_driveSubsystem, 
-        () -> m_gamePad.getRawAxis(GamePad.Axis.LeftStick.UpDown)));
+        () -> -m_gamePad.getRawAxis(GamePad.Axis.RightStick.UpDown)));
 
   }
 
@@ -84,11 +82,11 @@ public class RobotContainer {
    */
   private void configureDefaultCommands(){
 
-    // Set Arcade Drive as default
+    // Set Arcade Drive as defaults
     m_driveSubsystem.setDefaultCommand(
       new ArcadeDriveCommand(m_driveSubsystem,
-      () -> -m_gamePad.getRawAxis(GamePad.Axis.LeftStick.UpDown),
-      () -> m_gamePad.getRawAxis(GamePad.Axis.LeftStick.LeftRight))
+      () -> -m_maverik.getRawAxis(JoystickConstants.Axis.FightFlight),
+      () -> m_maverik.getRawAxis(JoystickConstants.Axis.TurnNeck))
     );
 
     // // Set Tank Drive as default
@@ -105,6 +103,7 @@ public class RobotContainer {
     Shuffleboard.selectTab("Teleop");
 
     m_driveSubsystem.setUpShuffleboard(teleopTab);
+    m_cameraSubsystem.setUpShuffleboard(teleopTab);
   }
 
   /**

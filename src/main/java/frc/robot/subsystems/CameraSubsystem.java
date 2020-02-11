@@ -54,7 +54,7 @@ public class CameraSubsystem extends SubsystemBase {
       DriverStation.reportError("Error instantiating USB Camera 0" + ex.getMessage(), true);
     }
 
-    m_outputStream = CameraServer.getInstance().putVideo("VisionCam", 320, 240);
+    m_outputStream = CameraServer.getInstance().putVideo("Gandalf", 320, 240);
     
     m_suspendProcessing = true;
     startVisionThread();
@@ -150,10 +150,10 @@ public class CameraSubsystem extends SubsystemBase {
   /**
    * Set up the shuffleboard tab for this subsystem
    */
-  public void setUpShuffleboard(ShuffleboardTab drivingTab) {
+  public void setUpShuffleboard(ShuffleboardTab teleopTab) {
     ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
 
-    ShuffleboardLayout targetInfo = visionTab.getLayout("Target Info");
+    ShuffleboardLayout targetInfo = visionTab.getLayout("Target Info", BuiltInLayouts.kList);
     
     SBNTE.targetStatus = targetInfo.add("Status", "Initializing...")
       .getEntry();
@@ -166,7 +166,7 @@ public class CameraSubsystem extends SubsystemBase {
     SBNTE.offsetY = targetInfo.add("Offset Y", 0.0)
       .getEntry();
     
-    ShuffleboardLayout procInfo = visionTab.getLayout("Processing Info");
+    ShuffleboardLayout procInfo = visionTab.getLayout("Processing Info", BuiltInLayouts.kList);
       
     SBNTE.isSuspended = procInfo.add("Is Suspended", false)
       .withWidget(BuiltInWidgets.kBooleanBox)

@@ -12,21 +12,21 @@ public final class Constants {
         public final class PwmPorts {
             public static final int RightRearMotor = 2;
             public static final int RightFrontMotor = 3;
-            public static final int LeftRearMotor = 1;
-            public static final int LeftFrontMotor = 0;
-           
+            public static final int LeftRearMotor = 0;
+            public static final int LeftFrontMotor = 1;
         }
         public final class DioPorts {
-            public static final int RightEncoderA = 4;
-            public static final int RightEncoderB = 5;
-            public static final int LeftEncoderA = 2;
-            public static final int LeftEncoderB = 3;
+            public static final int RightEncoderA = 0;
+            public static final int RightEncoderB = 1;
+            public static final int LeftEncoderA = 4;
+            public static final int LeftEncoderB = 5;
         }
     }
 
     public static final class Laptop {
         public final class UsbPorts {
             public static final int GamePad = 2;
+            public static final int Joystick = 3;
         }
     }
 
@@ -56,10 +56,16 @@ public final class Constants {
             // public static final int RightJoyStickClick = 12;
         }
     }
-
+    public static final class JoystickConstants{
+        public final class Axis {
+            public static final int LeftRight = 0;
+            public static final int FightFlight = 1;
+            public static final int TurnNeck = 2;
+        }
+    }
     public static final class DriveConstants {
         public static final boolean kLeftEncoderReversed = true;
-        public static final boolean kRightEncoderReversed = false;
+        public static final boolean kRightEncoderReversed = true;
         
         public static final int kEncoderCPR = 100;
         public static final double kWheelDiameterInches = 6;

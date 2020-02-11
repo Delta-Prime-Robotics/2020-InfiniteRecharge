@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -25,15 +26,15 @@ public class PDPSubsystem extends SubsystemBase {
     
     pdpTab.add(m_pdp);
 
-    ShuffleboardLayout values = pdpTab.getLayout("PDP Values");
+    ShuffleboardLayout values = pdpTab.getLayout("PDP Values", BuiltInLayouts.kList);
     
-    values.addNumber("Voltage", () -> m_pdp.getVoltage());
+    //values.addNumber("Voltage", () -> m_pdp.getVoltage());
     values.addNumber("Temperature", () -> m_pdp.getTemperature());
-    values.addNumber("Total Current", () -> m_pdp.getTotalCurrent());
+    //values.addNumber("Total Current", () -> m_pdp.getTotalCurrent());
     values.addNumber("Total Energy", () -> m_pdp.getTotalEnergy());
     values.addNumber("Total Power", () -> m_pdp.getTotalPower());
 
-    ShuffleboardLayout graphs = pdpTab.getLayout("PDP Graphs");
+    ShuffleboardLayout graphs = pdpTab.getLayout("PDP Graphs", BuiltInLayouts.kList);
     //.withProperties(java.util.Map.of("Label position", "HIDDEN"));
     
     graphs.addNumber("Voltage", () -> m_pdp.getVoltage())
@@ -47,25 +48,6 @@ public class PDPSubsystem extends SubsystemBase {
     graphs.addNumber("Total Power", () -> m_pdp.getTotalPower())
     .withWidget(BuiltInWidgets.kGraph);
 
-    ShuffleboardLayout channels = pdpTab.getLayout("PDP Channels");
-      //.withProperties(java.util.Map.of("Label position", "HIDDEN"));
-    
-    channels.addNumber("0", () -> m_pdp.getCurrent(0));
-    channels.addNumber("1", () -> m_pdp.getCurrent(1));
-    channels.addNumber("2", () -> m_pdp.getCurrent(2));
-    channels.addNumber("3", () -> m_pdp.getCurrent(3));
-    channels.addNumber("4", () -> m_pdp.getCurrent(4));
-    channels.addNumber("5", () -> m_pdp.getCurrent(5));
-    channels.addNumber("6", () -> m_pdp.getCurrent(6));
-    channels.addNumber("7", () -> m_pdp.getCurrent(7));
-    channels.addNumber("8", () -> m_pdp.getCurrent(8));
-    channels.addNumber("9", () -> m_pdp.getCurrent(9));
-    channels.addNumber("10", () -> m_pdp.getCurrent(10));
-    channels.addNumber("11", () -> m_pdp.getCurrent(11));
-    channels.addNumber("12", () -> m_pdp.getCurrent(12));
-    channels.addNumber("13", () -> m_pdp.getCurrent(13));
-    channels.addNumber("14", () -> m_pdp.getCurrent(14));
-    channels.addNumber("15", () -> m_pdp.getCurrent(15));
   }
 
   @Override
