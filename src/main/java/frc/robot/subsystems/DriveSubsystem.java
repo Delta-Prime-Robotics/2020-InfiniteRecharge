@@ -11,8 +11,11 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
@@ -21,6 +24,8 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.*;
+
+import java.util.Map;
 
 
 public class DriveSubsystem extends SubsystemBase {
@@ -46,6 +51,8 @@ public class DriveSubsystem extends SubsystemBase {
                                               EncodingType.k4X);
   // The gyro sensor
   private AHRS m_navx;
+  
+  private NetworkTableEntry m_rotationBar;
 
   /**
    * Creates a new DriveSubsystem.
@@ -79,6 +86,8 @@ public class DriveSubsystem extends SubsystemBase {
     driveTab.add("Right Encoder",m_rightEncoder);
 
     driveTab.addNumber("turnScale Value", () -> this.turnScale());
+
+    driveTab.add(this);
   }
 
   @Override
@@ -114,6 +123,20 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void tankDrive(double leftSpeed, double rightSpeed) {
     m_diffDrive.tankDrive(leftSpeed, rightSpeed);
+  }
+
+  public void autoTurn(double rotation) {
+    SmartDashboard.putNumber("Passed Rotation", rotation);
+
+    if (rotation > 0.01 && rotation < 0.51) {
+      rotation = 0.51;
+    }
+    if (rotation < -0.01 && rotation > -0.51) {
+      rotation = -0.51;
+    }
+    SmartDashboard.putNumber("Calc Rotation", rotation);
+
+    m_diffDrive.arcadeDrive(0, rotation);
   }
 
   /**

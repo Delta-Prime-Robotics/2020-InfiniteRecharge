@@ -15,6 +15,9 @@ import frc.robot.subsystems.DriveSubsystem;
 import static frc.robot.Constants.*;
 
 public class TurnByAngleCommand extends ProfiledPIDCommand {
+  private DriveSubsystem m_drive;
+  private double m_targetAngle;
+
   /**
    * Creates a new TurnByAngleCommand.
    * @param targetAngleDegrees The angle to turn to, in degrees
@@ -33,16 +36,25 @@ public class TurnByAngleCommand extends ProfiledPIDCommand {
         // Set reference to target
         targetAngleDegrees, 
         // Pipe output to turn robot
-        (output, setpoint) -> drive.arcadeDrive(0, output), 
+        (output, setpoint) -> drive.autoTurn(output), 
         // Require the drive subsystem
         drive);
 
+      m_drive = drive;
+      m_targetAngle = targetAngleDegrees;
+      
       // Set the PID controller to be continuous (because it's an angle controller)
       getController().enableContinuousInput(-180, 180);
 
-      // Set the controller tollerance - the delta tolerance ensures the robot is stationary at the
+      // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
       // setpoint before it is considered as having reached the reference
       getController().setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
+  }
+
+  @Override
+  public void initialize() {
+    super.initialize();
+    getController().setGoal(m_drive.getHeading() + m_targetAngle);
   }
 
   // Returns true when the command should end.

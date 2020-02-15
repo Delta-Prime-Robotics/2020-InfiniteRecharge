@@ -67,7 +67,7 @@ public final class Constants {
         public static final boolean kLeftEncoderReversed = true;
         public static final boolean kRightEncoderReversed = true;
         
-        public static final int kEncoderCPR = 100;
+        public static final int kEncoderCPR = 360;
         public static final double kWheelDiameterInches = 6;
         public static final double kEncoderDistancePerPulse = 
             (kWheelDiameterInches * Math.PI) / (double) kEncoderCPR;
@@ -75,11 +75,11 @@ public final class Constants {
         public static final boolean kGyroReversed = false;
 
         // PID constants for turning the robot
-        public static final double kTurnP = 0.055;
-        public static final double kTurnI = 0;
+        public static final double kTurnP = 0.0535;
+        public static final double kTurnI = 0.0;
         public static final double kTurnD = 0;
 
-        public static final double kTurnToleranceDeg = 2;           // degrees
+        public static final double kTurnToleranceDeg = 1;           // degrees
         public static final double kTurnRateToleranceDegPerS = 10;  // degrees per second
 
         public static final double kMaxTurnRateDegPerS = 100;

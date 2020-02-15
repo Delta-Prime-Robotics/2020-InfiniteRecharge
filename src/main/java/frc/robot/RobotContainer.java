@@ -14,8 +14,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import frc.robot.Constants.GamePad.Buttons;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -29,10 +31,10 @@ import static frc.robot.Constants.*;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  @SuppressWarnings("unused") //The PDP subsystem is intentionally unused, it just displays PDP data
-  private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
+  // @SuppressWarnings("unused") //The PDP subsystem is intentionally unused, it just displays PDP data
+  // private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-  private final CameraSubsystem m_cameraSubsystem = new CameraSubsystem();
+  //private final CameraSubsystem m_cameraSubsystem = new CameraSubsystem();
 
   // OI controllers are defined here...
   private final Joystick m_gamePad = new Joystick(Laptop.UsbPorts.GamePad);
@@ -73,6 +75,11 @@ public class RobotContainer {
       .whenHeld(new DriveStraightCommand(m_driveSubsystem, 
         () -> -m_gamePad.getRawAxis(GamePad.Axis.RightStick.UpDown)));
 
+    new JoystickButton(m_gamePad, Buttons.X)
+      .whenPressed(new TurnByAngleCommand(m_driveSubsystem, 10).withTimeout(1));
+
+    new JoystickButton(m_gamePad, Buttons.B)
+      .whenPressed(new TurnByAngleCommand(m_driveSubsystem, -10).withTimeout(1));
   }
 
   /**
@@ -89,6 +96,10 @@ public class RobotContainer {
       () -> m_maverik.getRawAxis(JoystickConstants.Axis.TurnNeck))
     );
 
+    // m_driveSubsystem.setDefaultCommand(
+    //   new RunCommand(() -> m_driveSubsystem.autoTurn(m_gamePad.getRawAxis(GamePad.Axis.RightStick.LeftRight)), m_driveSubsystem)
+    // );
+
     // // Set Tank Drive as default
     // m_driveSubsystem.setDefaultCommand(
     //   new TankDriveCommand(m_driveSubsystem, 
@@ -100,10 +111,10 @@ public class RobotContainer {
   private void setUpShuffleboard() {
     // The main tab during teleop. Each subsystem may have its own tab too
     ShuffleboardTab teleopTab = Shuffleboard.getTab("Teleop");
-    Shuffleboard.selectTab("Teleop");
+    //Shuffleboard.selectTab("Teleop");
 
     m_driveSubsystem.setUpShuffleboard(teleopTab);
-    m_cameraSubsystem.setUpShuffleboard(teleopTab);
+    //m_cameraSubsystem.setUpShuffleboard(teleopTab);
   }
 
   /**
