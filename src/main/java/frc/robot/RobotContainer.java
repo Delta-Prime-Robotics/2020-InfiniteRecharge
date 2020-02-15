@@ -35,6 +35,7 @@ public class RobotContainer {
   // private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   //private final CameraSubsystem m_cameraSubsystem = new CameraSubsystem();
+  private final IntakeSubsystem m_intake = new IntakeSubsystem();
 
   // OI controllers are defined here...
   private final Joystick m_gamePad = new Joystick(Laptop.UsbPorts.GamePad);
@@ -80,6 +81,12 @@ public class RobotContainer {
 
     new JoystickButton(m_gamePad, Buttons.B)
       .whenPressed(new TurnByAngleCommand(m_driveSubsystem, -10).withTimeout(1));
+
+    new JoystickButton(m_gamePad, Buttons.LT)
+      .whenHeld(new RunCommand(() -> m_intake.recharge(), m_intake));
+
+    new JoystickButton(m_gamePad, Buttons.RT)
+      .whenHeld(new RunCommand(() -> m_intake.discharge(), m_intake));
   }
 
   /**

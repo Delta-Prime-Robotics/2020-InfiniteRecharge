@@ -14,13 +14,18 @@ public final class Constants {
             public static final int RightFrontMotor = 3;
             public static final int LeftRearMotor = 0;
             public static final int LeftFrontMotor = 1;
+            public static final int IntakeMotor = 9;
         }
         public final class DioPorts {
             public static final int RightEncoderA = 0;
             public static final int RightEncoderB = 1;
-            public static final int LeftEncoderA = 4;
-            public static final int LeftEncoderB = 5;
+            public static final int LeftEncoderA = 2;
+            public static final int LeftEncoderB = 3;
         }
+    public final class CanIDs {
+        public static final int LeftsparkMax = 11;
+        public static final int RightsparkMax = 12;
+    }
     }
 
     public static final class Laptop {
@@ -83,6 +88,7 @@ public final class Constants {
         public static final double kTurnRateToleranceDegPerS = 10;  // degrees per second
 
         public static final double kMaxTurnRateDegPerS = 100;
-        public static final double kMaxTurnAccelDegPerSSquared = 300;    }
+        public static final double kMaxTurnAccelDegPerSSquared = 300;    
+    }
 }
 
