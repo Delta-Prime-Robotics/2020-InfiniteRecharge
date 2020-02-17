@@ -9,7 +9,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -22,32 +21,42 @@ public class PDPSubsystem extends SubsystemBase {
    * Creates a new PDPSubsystem.
    */
   public PDPSubsystem() {
-    ShuffleboardTab pdpTab = Shuffleboard.getTab("PDP");
-    
-    pdpTab.add(m_pdp);
 
-    ShuffleboardLayout values = pdpTab.getLayout("PDP Values", BuiltInLayouts.kList);
-    
-    //values.addNumber("Voltage", () -> m_pdp.getVoltage());
-    values.addNumber("Temperature", () -> m_pdp.getTemperature());
-    //values.addNumber("Total Current", () -> m_pdp.getTotalCurrent());
-    values.addNumber("Total Energy", () -> m_pdp.getTotalEnergy());
-    values.addNumber("Total Power", () -> m_pdp.getTotalPower());
+  }
+  
+  /**
+   * Sets up Shuffleboard for this subsystem
+   * @param teleopTab The main tab used during teleop
+   * @param atCompetition Whether to exclude testing info from Shuffleboard
+   */
+  public void setUpShuffleboard(ShuffleboardTab teleopTab, Boolean atCompetition) {
 
-    ShuffleboardLayout graphs = pdpTab.getLayout("PDP Graphs", BuiltInLayouts.kList);
-    //.withProperties(java.util.Map.of("Label position", "HIDDEN"));
-    
-    graphs.addNumber("Voltage", () -> m_pdp.getVoltage())
-      .withWidget(BuiltInWidgets.kGraph);
-    graphs.addNumber("Temperature", () -> m_pdp.getTemperature())
-    .withWidget(BuiltInWidgets.kGraph);
-    graphs.addNumber("Total Current", () -> m_pdp.getTotalCurrent())
-    .withWidget(BuiltInWidgets.kGraph);
-    graphs.addNumber("Total Energy", () -> m_pdp.getTotalEnergy())
-    .withWidget(BuiltInWidgets.kGraph);
-    graphs.addNumber("Total Power", () -> m_pdp.getTotalPower())
-    .withWidget(BuiltInWidgets.kGraph);
+    if (!atCompetition) {
+      ShuffleboardTab pdpTab = Shuffleboard.getTab("PDP");
+      
+      pdpTab.add(m_pdp);
 
+      ShuffleboardLayout values = pdpTab.getLayout("PDP Values", BuiltInLayouts.kList);
+      
+      //values.addNumber("Voltage", () -> m_pdp.getVoltage());
+      //values.addNumber("Total Current", () -> m_pdp.getTotalCurrent());
+      values.addNumber("Temperature", () -> m_pdp.getTemperature());
+      values.addNumber("Total Energy", () -> m_pdp.getTotalEnergy());
+      values.addNumber("Total Power", () -> m_pdp.getTotalPower());
+
+      // ShuffleboardLayout graphs = pdpTab.getLayout("PDP Graphs", BuiltInLayouts.kList);
+      
+      // graphs.addNumber("Voltage", () -> m_pdp.getVoltage())
+      //   .withWidget(BuiltInWidgets.kGraph);
+      // graphs.addNumber("Temperature", () -> m_pdp.getTemperature())
+      // .withWidget(BuiltInWidgets.kGraph);
+      // graphs.addNumber("Total Current", () -> m_pdp.getTotalCurrent())
+      // .withWidget(BuiltInWidgets.kGraph);
+      // graphs.addNumber("Total Energy", () -> m_pdp.getTotalEnergy())
+      // .withWidget(BuiltInWidgets.kGraph);
+      // graphs.addNumber("Total Power", () -> m_pdp.getTotalPower())
+      // .withWidget(BuiltInWidgets.kGraph);
+    }
   }
 
   @Override

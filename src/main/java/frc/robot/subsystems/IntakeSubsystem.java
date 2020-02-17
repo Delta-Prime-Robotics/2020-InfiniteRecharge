@@ -7,8 +7,8 @@
 
 package frc.robot.subsystems;
 
-
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
 
@@ -21,6 +21,15 @@ public class IntakeSubsystem extends SubsystemBase {
    */
   public IntakeSubsystem() {
   
+  }
+  
+  /**
+   * Sets up Shuffleboard for this subsystem
+   * @param teleopTab The main tab used during teleop
+   * @param atCompetition Whether to exclude testing info from Shuffleboard
+   */
+  public void setUpShuffleboard(ShuffleboardTab teleopTab, Boolean atCompetition) {
+    // ToDo: add specific info about this subsystem
   }
 
   @Override

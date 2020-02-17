@@ -11,13 +11,11 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -25,22 +23,21 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.*;
 
-import java.util.Map;
-
 
 public class DriveSubsystem extends SubsystemBase {
 
   // Make the motor controllers class variables so they show up on LiveWindow
-  private  VictorSP rightFrontMotor = new VictorSP(RoboRio.PwmPorts.RightFrontMotor);
-  private  VictorSP rightRearMotor = new VictorSP(RoboRio.PwmPorts.RightRearMotor);      
-  private  SpeedControllerGroup rightGroup = new SpeedControllerGroup(rightFrontMotor, rightRearMotor);
+  private  VictorSP m_rightFrontMotor = new VictorSP(RoboRio.PwmPorts.RightFrontMotor);
+  private  VictorSP m_rightRearMotor  = new VictorSP(RoboRio.PwmPorts.RightRearMotor);      
+  private  SpeedControllerGroup m_rightGroup = new SpeedControllerGroup(m_rightFrontMotor, m_rightRearMotor);
   
-  private  VictorSP leftFrontMotor = new VictorSP(RoboRio.PwmPorts.LeftFrontMotor);
-  private  VictorSP leftRearMotor = new VictorSP(RoboRio.PwmPorts.LeftRearMotor);      
-  private  SpeedControllerGroup leftGroup = new SpeedControllerGroup(leftFrontMotor, leftRearMotor);
+  private  VictorSP m_leftFrontMotor = new VictorSP(RoboRio.PwmPorts.LeftFrontMotor);
+  private  VictorSP m_leftRearMotor  = new VictorSP(RoboRio.PwmPorts.LeftRearMotor);      
+  private  SpeedControllerGroup m_leftGroup = new SpeedControllerGroup(m_leftFrontMotor, m_leftRearMotor);
 
   private DifferentialDrive m_diffDrive;
 
+  // Encoders
   private Encoder m_leftEncoder = new Encoder(RoboRio.DioPorts.LeftEncoderA, 
                                               RoboRio.DioPorts.LeftEncoderB, 
                                               DriveConstants.kLeftEncoderReversed,
@@ -49,20 +46,22 @@ public class DriveSubsystem extends SubsystemBase {
                                               RoboRio.DioPorts.RightEncoderB, 
                                               DriveConstants.kRightEncoderReversed,
                                               EncodingType.k4X);
+  
   // The gyro sensor
   private AHRS m_navx;
-  
-  private NetworkTableEntry m_rotationBar;
 
+  // Class variables for collision detection
+  private double m_lastLinearAccelX;
+  private double m_lastLinearAccelY;
+  
   /**
    * Creates a new DriveSubsystem.
    */
   public DriveSubsystem() { 
-    m_diffDrive = new DifferentialDrive(leftGroup, rightGroup);
+    m_diffDrive = new DifferentialDrive(m_leftGroup, m_rightGroup);
     
     m_leftEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
     m_rightEncoder.setDistancePerPulse(DriveConstants.kEncoderDistancePerPulse);
-    
     
     try {
       m_navx = new AHRS(SPI.Port.kMXP);
@@ -73,30 +72,32 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * 
+   * Sets up Shuffleboard for this subsystem
+   * @param teleopTab The main tab used during teleop
+   * @param atCompetition Whether to exclude testing info from Shuffleboard
    */
-  public void setUpShuffleboard(ShuffleboardTab teleopTab) {
-    ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
+  public void setUpShuffleboard(ShuffleboardTab teleopTab, Boolean atCompetition) {
 
-    if (m_navx != null) {
-      driveTab.add(m_navx);
+    if (!atCompetition) {
+      ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
+
+      if (m_navx != null) {
+        driveTab.add(m_navx);
+      }
+      
+      driveTab.add("Left Encoder", m_leftEncoder);
+      driveTab.add("Right Encoder",m_rightEncoder);
+
+      driveTab.addNumber("turnScale Value", () -> this.turnScale());
+
+      driveTab.add(this);
     }
-    
-    driveTab.add("Left Encoder", m_leftEncoder);
-    driveTab.add("Right Encoder",m_rightEncoder);
-
-    driveTab.addNumber("turnScale Value", () -> this.turnScale());
-
-    driveTab.add(this);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    // SmartDashboard.putNumber("Left Encoder Distance", m_leftEncoder.getRaw());
-    // SmartDashboard.putNumber("Right Encoder Distance", m_rightEncoder.getRaw());
-    // SmartDashboard.putNumber("Garbage Number", 11.4);
-    // SmartDashboard.putNumber("Gyro Heading", getHeading());
+    detectCollision();
   }
 
   /**
@@ -125,6 +126,11 @@ public class DriveSubsystem extends SubsystemBase {
     m_diffDrive.tankDrive(leftSpeed, rightSpeed);
   }
 
+  /**
+   * Turns the robot only (no forward motion)
+   * Sets a minimum value to support being called from a PID controller
+   * @param rotation The rotation rate around the z-axis. Clockwise is positive.
+   */
   public void autoTurn(double rotation) {
     SmartDashboard.putNumber("Passed Rotation", rotation);
 
@@ -134,7 +140,7 @@ public class DriveSubsystem extends SubsystemBase {
     if (rotation < -0.01 && rotation > -0.51) {
       rotation = -0.51;
     }
-    SmartDashboard.putNumber("Calc Rotation", rotation);
+    SmartDashboard.putNumber("Calc'ed Rotation", rotation);
 
     m_diffDrive.arcadeDrive(0, rotation);
   }
@@ -152,14 +158,13 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void driveStraight(double forward) {
     double rotation = 0;
-    // Calculate the rotation to keep the robot going straight
+    // To do: Calculate the rotation to keep the robot going straight
 
     m_diffDrive.arcadeDrive(forward, rotation);
   }
 
   /**
    * Sets the max output of the drive.  Useful for scaling the drive to drive more slowly.
-   *
    * @param maxOutput the maximum output to which the drive will be constrained
    */
   public void setMaxOutput(double maxOutput) {
@@ -167,7 +172,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
   
   /**
-   * Resets the drive encoders to zero
+   * Resets both drive encoders to zero
    */
   public void resetEncoders() {
     m_leftEncoder.reset();
@@ -196,7 +201,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
-   * @return rate of turn for 
+   * @return rate of turn for driving straight via encoders
    */
   public double turnScale(){
     double rate = leftDistance()-rightDistance();
@@ -229,6 +234,33 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getTurnRate() {
     return m_navx.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+  }
+
+  public void detectCollision() {
+    final double COLLISION_THRESHOLD_DELTA_G = 0.5;
+
+    boolean collisionDetectedX = false;
+    boolean collisionDetectedY = false;
+
+    double currentLinearAccelX = m_navx.getWorldLinearAccelX();
+    double currentJerkX = currentLinearAccelX - m_lastLinearAccelX;
+    m_lastLinearAccelX = currentLinearAccelX;
+    
+    double currentLinearAccelY = m_navx.getWorldLinearAccelY();
+    double currentJerkY = currentLinearAccelY - m_lastLinearAccelY;
+    m_lastLinearAccelY = currentLinearAccelY;
+
+    if (Math.abs(currentJerkX) > COLLISION_THRESHOLD_DELTA_G) {
+      collisionDetectedX = true;
+    }
+
+    if (Math.abs(currentJerkY) > COLLISION_THRESHOLD_DELTA_G) {
+      collisionDetectedY = true;
+    }
+
+    SmartDashboard.putBoolean("Collision Detected X", collisionDetectedX);
+    SmartDashboard.putBoolean("Collision Detected Y", collisionDetectedY);
+
   }
 }
 

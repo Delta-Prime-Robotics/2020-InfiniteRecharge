@@ -7,41 +7,39 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
+import java.util.function.DoubleSupplier;
+
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.DriveSubsystem;
 
 import static frc.robot.Constants.*;
 
-public class TurnByAngleCommand extends ProfiledPIDCommand {
+
+public class TurnByAngleCommand extends PIDCommand {
   private DriveSubsystem m_drive;
-  private double m_targetAngle;
+  private DoubleSupplier m_targetAngleDegrees;
 
   /**
    * Creates a new TurnByAngleCommand.
    * @param targetAngleDegrees The angle to turn to, in degrees
    * @param drive              The drive subsystem to use
    */
-  public TurnByAngleCommand(DriveSubsystem drive, double targetAngleDegrees) {
+  public TurnByAngleCommand(DriveSubsystem drive, DoubleSupplier targetAngleDegrees) {
     super(
         // The controller that the command will use
-        new ProfiledPIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, 
-        DriveConstants.kTurnD, new TrapezoidProfile.Constraints(
-          DriveConstants.kMaxTurnRateDegPerS,
-          DriveConstants.kMaxTurnAccelDegPerSSquared
-        )), 
+        new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD), 
         // Close loop on heading
         drive::getHeading, 
         // Set reference to target
         targetAngleDegrees, 
         // Pipe output to turn robot
-        (output, setpoint) -> drive.autoTurn(output), 
+        (output) -> drive.autoTurn(output), 
         // Require the drive subsystem
         drive);
 
       m_drive = drive;
-      m_targetAngle = targetAngleDegrees;
+      m_targetAngleDegrees = targetAngleDegrees;
       
       // Set the PID controller to be continuous (because it's an angle controller)
       getController().enableContinuousInput(-180, 180);
@@ -54,12 +52,12 @@ public class TurnByAngleCommand extends ProfiledPIDCommand {
   @Override
   public void initialize() {
     super.initialize();
-    getController().setGoal(m_drive.getHeading() + m_targetAngle);
+    getController().setSetpoint(m_drive.getHeading() + m_targetAngleDegrees.getAsDouble());
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return getController().atGoal();
+    return getController().atSetpoint();
   }
 }

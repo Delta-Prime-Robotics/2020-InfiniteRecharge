@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -15,7 +14,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.GamePad.Buttons;
 import frc.robot.commands.*;
@@ -30,12 +28,14 @@ import static frc.robot.Constants.*;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  // Set to true when we're at a competition to cut down on info on Shuffleboard
+  private final Boolean m_atCompetition = false;
+
   // The robot's subsystems and commands are defined here...
-  // @SuppressWarnings("unused") //The PDP subsystem is intentionally unused, it just displays PDP data
-  // private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
+  private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   //private final CameraSubsystem m_cameraSubsystem = new CameraSubsystem();
-  private final IntakeSubsystem m_intake = new IntakeSubsystem();
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
   // OI controllers are defined here...
   private final Joystick m_gamePad = new Joystick(Laptop.UsbPorts.GamePad);
@@ -48,11 +48,10 @@ public class RobotContainer {
   public RobotContainer() {
     m_driveSubsystem.setMaxOutput(0.75);
 
-    // Configure the button bindings
     configureButtonBindings();
-    // Configure default commands
+    
     configureDefaultCommands();
-    // Set up Shuffleboard for the robot
+    
     setUpShuffleboard();
   }
 
@@ -63,30 +62,35 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // new JoystickButton(m_gamePad, GamePad.Buttons.B)
-    // .whileHeld(() ->m_driveSubsystem.m_driveStraight = true);
    
-     new JoystickButton(m_gamePad, GamePad.Buttons.A)
+    // Reset drive system encoders
+    new JoystickButton(m_gamePad, GamePad.Buttons.A)
        .whenPressed(() -> m_driveSubsystem.resetEncoders());
 
-    // new JoystickButton(m_gamePad, GamePad.Buttons.B)
-    // .whenInactive(() ->m_driveSubsystem.m_driveStraight = false);
-
+    // Testing... Drive Straight
     new JoystickButton(m_gamePad, GamePad.Buttons.LB)
       .whenHeld(new DriveStraightCommand(m_driveSubsystem, 
-        () -> -m_gamePad.getRawAxis(GamePad.Axis.RightStick.UpDown)));
+        () -> -m_gamePad.getRawAxis(GamePad.Axis.RightStickUpDown)));
 
+    // Testing... turn 10 degrees 
     new JoystickButton(m_gamePad, Buttons.X)
-      .whenPressed(new TurnByAngleCommand(m_driveSubsystem, 10).withTimeout(1));
+      .whenPressed(new TurnByAngleCommand(m_driveSubsystem, 
+        () -> 10) //m_driveSubsystem.getHeading() + 10)
+      .withTimeout(1));
 
+    // Testing... turn -10 degrees
     new JoystickButton(m_gamePad, Buttons.B)
-      .whenPressed(new TurnByAngleCommand(m_driveSubsystem, -10).withTimeout(1));
+      .whenPressed(new TurnByAngleCommand(m_driveSubsystem, 
+      () -> -10) //m_driveSubsystem.getHeading() - 10)
+      .withTimeout(1));
 
+    // Move intake system forward
     new JoystickButton(m_gamePad, Buttons.LT)
-      .whenHeld(new RunCommand(() -> m_intake.recharge(), m_intake));
+      .whenHeld(new RunCommand(() -> m_intakeSubsystem.recharge(), m_intakeSubsystem));
 
+    // Move intake system backward
     new JoystickButton(m_gamePad, Buttons.RT)
-      .whenHeld(new RunCommand(() -> m_intake.discharge(), m_intake));
+      .whenHeld(new RunCommand(() -> m_intakeSubsystem.discharge(), m_intakeSubsystem));
   }
 
   /**
@@ -96,18 +100,14 @@ public class RobotContainer {
    */
   private void configureDefaultCommands(){
 
-    // Set Arcade Drive as defaults
+    // Set Arcade Drive as the default
     m_driveSubsystem.setDefaultCommand(
       new ArcadeDriveCommand(m_driveSubsystem,
       () -> -m_maverik.getRawAxis(JoystickConstants.Axis.FightFlight),
       () -> m_maverik.getRawAxis(JoystickConstants.Axis.TurnNeck))
     );
 
-    // m_driveSubsystem.setDefaultCommand(
-    //   new RunCommand(() -> m_driveSubsystem.autoTurn(m_gamePad.getRawAxis(GamePad.Axis.RightStick.LeftRight)), m_driveSubsystem)
-    // );
-
-    // // Set Tank Drive as default
+    // // Set Tank Drive as the default
     // m_driveSubsystem.setDefaultCommand(
     //   new TankDriveCommand(m_driveSubsystem, 
     //     () -> -m_gamePad.getRawAxis(GamePad.Axis.LeftStick.UpDown),
@@ -115,22 +115,29 @@ public class RobotContainer {
     // );
   }
 
+  /**
+   * Sets up Shuffleboard, deferring to each subsystem to add their components
+   */
   private void setUpShuffleboard() {
     // The main tab during teleop. Each subsystem may have its own tab too
     ShuffleboardTab teleopTab = Shuffleboard.getTab("Teleop");
-    //Shuffleboard.selectTab("Teleop");
 
-    m_driveSubsystem.setUpShuffleboard(teleopTab);
-    //m_cameraSubsystem.setUpShuffleboard(teleopTab);
+    if (m_atCompetition) {
+      Shuffleboard.selectTab("Teleop");
+    }
+
+    //m_cameraSubsystem.setUpShuffleboard(teleopTab, m_atCompetition);
+    m_driveSubsystem.setUpShuffleboard(teleopTab, m_atCompetition);
+    m_intakeSubsystem.setUpShuffleboard(teleopTab, m_atCompetition);
+    m_pdpSubsystem.setUpShuffleboard(teleopTab, true);
   }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
+    //To do: replace with autonomous command or value from chooser if > 1
     return null;
   }
 }
