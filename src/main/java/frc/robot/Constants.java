@@ -8,12 +8,14 @@
 package frc.robot;
 
 public final class Constants {
+    // Connections to the RoboRio
     public static final class RoboRio {
         public final class PwmPorts {
-            public static final int RightRearMotor = 0;
-            public static final int RightFrontMotor = 1;
-            public static final int LeftRearMotor = 2;
-            public static final int LeftFrontMotor = 3;
+            public static final int RightRearMotor = 2;
+            public static final int RightFrontMotor = 3;
+            public static final int LeftRearMotor = 0;
+            public static final int LeftFrontMotor = 1;
+
             public static final int IntakeMotor = 9;
         }
         public final class DioPorts {
@@ -22,12 +24,13 @@ public final class Constants {
             public static final int LeftEncoderA = 2;
             public static final int LeftEncoderB = 3;
         }
-    public final class CanIDs {
-        public static final int LeftsparkMax = 11;
-        public static final int RightsparkMax = 12;
-    }
+        public final class CanIDs {
+            public static final int LeftsparkMax = 11;
+            public static final int RightsparkMax = 12;
+        }
     }
 
+    // Connections to the Drivers' Station Laptop
     public static final class Laptop {
         public final class UsbPorts {
             public static final int GamePad = 2;
@@ -35,16 +38,13 @@ public final class Constants {
         }
     }
 
+    // Logitech Game Pad
     public static final class GamePad {
         public final class Axis {
-            public final class LeftStick {
-                public static final int LeftRight = 0;
-                public static final int UpDown = 1;
-            }
-            public final class RightStick {
-                public static final int LeftRight = 2;
-                public static final int UpDown = 3;
-            }
+            public static final int LeftStickLeftRight = 0;
+            public static final int LeftStickUpDown = 1;
+            public static final int RightStickLeftRight = 2;
+            public static final int RightStickUpDown = 3;
         }
         public final class Buttons {
             public static final int X = 1;
@@ -61,6 +61,8 @@ public final class Constants {
             // public static final int RightJoyStickClick = 12;
         }
     }
+
+    // 3D Joystick
     public static final class JoystickConstants{
         public final class Axis {
             public static final int LeftRight = 0;
@@ -68,6 +70,8 @@ public final class Constants {
             public static final int TurnNeck = 2;
         }
     }
+
+    // Drive Constants
     public static final class DriveConstants {
         public static final boolean kLeftEncoderReversed = true;
         public static final boolean kRightEncoderReversed = false;

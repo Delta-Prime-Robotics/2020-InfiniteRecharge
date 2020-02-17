@@ -148,35 +148,40 @@ public class CameraSubsystem extends SubsystemBase {
   }
 
   /**
-   * Set up the shuffleboard tab for this subsystem
+   * Sets up Shuffleboard for this subsystem
+   * @param teleopTab The main tab used during teleop
+   * @param atCompetition Whether to exclude testing info from Shuffleboard
    */
-  public void setUpShuffleboard(ShuffleboardTab teleopTab) {
-    ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
+  public void setUpShuffleboard(ShuffleboardTab teleopTab, Boolean atCompetition) {
 
-    ShuffleboardLayout targetInfo = visionTab.getLayout("Target Info", BuiltInLayouts.kList);
-    
-    SBNTE.targetStatus = targetInfo.add("Status", "Initializing...")
-      .getEntry();
-    SBNTE.centerX = targetInfo.add("Center X", 0.0)
-      .getEntry();
-    SBNTE.centerY = targetInfo.add("Center Y", 0.0)
-      .getEntry();
-    SBNTE.offsetX = targetInfo.add("Offset X", 0.0)
-      .getEntry();
-    SBNTE.offsetY = targetInfo.add("Offset Y", 0.0)
-      .getEntry();
-    
-    ShuffleboardLayout procInfo = visionTab.getLayout("Processing Info", BuiltInLayouts.kList);
+    if (!atCompetition) {
+      ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
+
+      ShuffleboardLayout targetInfo = visionTab.getLayout("Target Info", BuiltInLayouts.kList);
       
-    SBNTE.isSuspended = procInfo.add("Is Suspended", false)
-      .withWidget(BuiltInWidgets.kBooleanBox)
-      .getEntry();
-    
-    SBNTE.toBeSuspended = procInfo.add("To Be Suspended", false)
-      .withWidget(BuiltInWidgets.kBooleanBox)
-      .getEntry();
+      SBNTE.targetStatus = targetInfo.add("Status", "Initializing...")
+        .getEntry();
+      SBNTE.centerX = targetInfo.add("Center X", 0.0)
+        .getEntry();
+      SBNTE.centerY = targetInfo.add("Center Y", 0.0)
+        .getEntry();
+      SBNTE.offsetX = targetInfo.add("Offset X", 0.0)
+        .getEntry();
+      SBNTE.offsetY = targetInfo.add("Offset Y", 0.0)
+        .getEntry();
+      
+      ShuffleboardLayout procInfo = visionTab.getLayout("Processing Info", BuiltInLayouts.kList);
+        
+      SBNTE.isSuspended = procInfo.add("Is Suspended", false)
+        .withWidget(BuiltInWidgets.kBooleanBox)
+        .getEntry();
+      
+      SBNTE.toBeSuspended = procInfo.add("To Be Suspended", false)
+        .withWidget(BuiltInWidgets.kBooleanBox)
+        .getEntry();
 
-    procInfo.add("Toggle Processing", new InstantCommand(this::toggleVisionProcessing, this));
+      procInfo.add("Toggle Processing", new InstantCommand(this::toggleVisionProcessing, this));
+    }
   }
 
   @Override
