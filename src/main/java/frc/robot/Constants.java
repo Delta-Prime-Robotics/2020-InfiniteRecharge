@@ -10,10 +10,10 @@ package frc.robot;
 public final class Constants {
     public static final class RoboRio {
         public final class PwmPorts {
-            public static final int RightRearMotor = 2;
-            public static final int RightFrontMotor = 3;
-            public static final int LeftRearMotor = 0;
-            public static final int LeftFrontMotor = 1;
+            public static final int RightRearMotor = 0;
+            public static final int RightFrontMotor = 1;
+            public static final int LeftRearMotor = 2;
+            public static final int LeftFrontMotor = 3;
             public static final int IntakeMotor = 9;
         }
         public final class DioPorts {
@@ -70,7 +70,7 @@ public final class Constants {
     }
     public static final class DriveConstants {
         public static final boolean kLeftEncoderReversed = true;
-        public static final boolean kRightEncoderReversed = true;
+        public static final boolean kRightEncoderReversed = false;
         
         public static final int kEncoderCPR = 360;
         public static final double kWheelDiameterInches = 6;
