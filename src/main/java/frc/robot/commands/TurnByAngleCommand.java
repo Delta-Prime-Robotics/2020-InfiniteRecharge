@@ -10,6 +10,7 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -52,12 +53,16 @@ public class TurnByAngleCommand extends PIDCommand {
   @Override
   public void initialize() {
     super.initialize();
-    getController().setSetpoint(m_drive.getHeading() + m_targetAngleDegrees.getAsDouble());
+    //getController().setSetpoint(m_drive.getHeading() + m_targetAngleDegrees.getAsDouble());
+    SmartDashboard.putNumber("TurnByAngle-init-heading", m_drive.getHeading());
+    SmartDashboard.putNumber("TurnByAngle-init-setpoint", getController().getSetpoint());
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    SmartDashboard.putNumber("TurnByAngle-final-heading", m_drive.getHeading());
+    SmartDashboard.putNumber("TurnByAngle-final-setpoint", getController().getSetpoint());
     return getController().atSetpoint();
   }
 }

@@ -34,7 +34,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-  //private final CameraSubsystem m_cameraSubsystem = new CameraSubsystem();
+  private final CameraSubsystem m_cameraSubsystem = new CameraSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
   // OI controllers are defined here...
@@ -67,21 +67,25 @@ public class RobotContainer {
     new JoystickButton(m_gamePad, GamePad.Buttons.A)
        .whenPressed(() -> m_driveSubsystem.resetEncoders());
 
+    // Reset drive system gyro
+    new JoystickButton(m_gamePad, GamePad.Buttons.Y)
+    .whenPressed(() -> m_driveSubsystem.zeroHeading());
+
     // Testing... Drive Straight
-    new JoystickButton(m_gamePad, GamePad.Buttons.LB)
+    new JoystickButton(m_maverik, 1)
       .whenHeld(new DriveStraightCommand(m_driveSubsystem, 
-        () -> -m_gamePad.getRawAxis(GamePad.Axis.RightStickUpDown)));
+        () -> -m_gamePad.getRawAxis(JoystickConstants.Axis.FightFlight)));
 
     // Testing... turn 10 degrees 
     new JoystickButton(m_gamePad, Buttons.X)
       .whenPressed(new TurnByAngleCommand(m_driveSubsystem, 
-        () -> 10) //m_driveSubsystem.getHeading() + 10)
+        () -> 0) // m_driveSubsystem.getHeading() + 10)
       .withTimeout(1));
 
     // Testing... turn -10 degrees
     new JoystickButton(m_gamePad, Buttons.B)
       .whenPressed(new TurnByAngleCommand(m_driveSubsystem, 
-      () -> -10) //m_driveSubsystem.getHeading() - 10)
+      () -> 0) //m_driveSubsystem.getHeading() - 10)
       .withTimeout(1));
 
     // Move intake system forward
@@ -126,10 +130,10 @@ public class RobotContainer {
       Shuffleboard.selectTab("Teleop");
     }
 
-    //m_cameraSubsystem.setUpShuffleboard(teleopTab, m_atCompetition);
+    m_cameraSubsystem.setUpShuffleboard(teleopTab, m_atCompetition);
     m_driveSubsystem.setUpShuffleboard(teleopTab, m_atCompetition);
     m_intakeSubsystem.setUpShuffleboard(teleopTab, m_atCompetition);
-    m_pdpSubsystem.setUpShuffleboard(teleopTab, true);
+    m_pdpSubsystem.setUpShuffleboard(teleopTab, m_atCompetition);
   }
 
   /**

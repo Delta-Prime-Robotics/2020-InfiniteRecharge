@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
@@ -22,6 +24,8 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.*;
+
+import java.util.Map;
 
 
 public class DriveSubsystem extends SubsystemBase {
@@ -50,8 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   private AHRS m_navx;
 
-  // Class variables for collision detection
-  private double m_lastLinearAccelX;
+  // Class variable for collision detection
   private double m_lastLinearAccelY;
   
   /**
@@ -82,15 +85,22 @@ public class DriveSubsystem extends SubsystemBase {
       ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
 
       if (m_navx != null) {
-        driveTab.add(m_navx);
+        driveTab.add(m_navx)
+        .withSize(5,5).withPosition(5, 0);
       }
       
-      driveTab.add("Left Encoder", m_leftEncoder);
-      driveTab.add("Right Encoder",m_rightEncoder);
+      ShuffleboardLayout encList = driveTab.getLayout("Encoders", BuiltInLayouts.kList)
+        .withSize(5, 8).withPosition(0,0)
+        .withProperties(Map.of("LabelPosition", "TOP"));
 
-      driveTab.addNumber("turnScale Value", () -> this.turnScale());
+      encList.add("Left Encoder", m_leftEncoder);
+      encList.add("Right Encoder",m_rightEncoder);
 
-      driveTab.add(this);
+      driveTab.addNumber("turnScale Value", () -> this.turnScale())
+        .withSize(3,2).withPosition(10, 0);
+
+      driveTab.add(this)
+        .withSize(8,2).withPosition(15, 0);
     }
   }
 
@@ -239,26 +249,16 @@ public class DriveSubsystem extends SubsystemBase {
   public void detectCollision() {
     final double COLLISION_THRESHOLD_DELTA_G = 0.5;
 
-    boolean collisionDetectedX = false;
     boolean collisionDetectedY = false;
-
-    double currentLinearAccelX = m_navx.getWorldLinearAccelX();
-    double currentJerkX = currentLinearAccelX - m_lastLinearAccelX;
-    m_lastLinearAccelX = currentLinearAccelX;
     
     double currentLinearAccelY = m_navx.getWorldLinearAccelY();
     double currentJerkY = currentLinearAccelY - m_lastLinearAccelY;
     m_lastLinearAccelY = currentLinearAccelY;
 
-    if (Math.abs(currentJerkX) > COLLISION_THRESHOLD_DELTA_G) {
-      collisionDetectedX = true;
-    }
-
     if (Math.abs(currentJerkY) > COLLISION_THRESHOLD_DELTA_G) {
       collisionDetectedY = true;
     }
 
-    SmartDashboard.putBoolean("Collision Detected X", collisionDetectedX);
     SmartDashboard.putBoolean("Collision Detected Y", collisionDetectedY);
 
   }
