@@ -19,17 +19,19 @@ import org.opencv.imgproc.Imgproc;
 import edu.wpi.cscore.CvSource;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.robot.vision.*;
 
+import static frc.robot.Constants.*;
+
+/**
+ * Camera subsystem for processing vision on the RoboRio
+ */
 public class CameraSubsystem extends SubsystemBase {
   private UsbCamera m_shooterCam;
 
@@ -45,7 +47,6 @@ public class CameraSubsystem extends SubsystemBase {
   
   private boolean m_suspendProcessing;
 
-  private NetworkTable m_gripData;
   
   /**
    * Creates a new CameraSubsystem.
@@ -53,18 +54,16 @@ public class CameraSubsystem extends SubsystemBase {
   public CameraSubsystem() {
     try {
       m_shooterCam = CameraServer.getInstance().startAutomaticCapture("ShooterCam", 0);
-      m_shooterCam.setResolution(320, 240);
+      m_shooterCam.setResolution(VisionConstants.kImageWidth, VisionConstants.kImageHeight);
     }
     catch (Exception ex) {
       DriverStation.reportError("Error instantiating USB Camera 0" + ex.getMessage(), true);
     }
 
-    m_gripData = NetworkTableInstance.getDefault().getTable("GRIP/myContoursReport");
-
-    //m_outputStream = CameraServer.getInstance().putVideo("Gandalf", 320, 240);
+    m_outputStream = CameraServer.getInstance().putVideo("Gandalf", 320, 240);
     
     m_suspendProcessing = true;
-    //startVisionThread();
+    startVisionThread();
   }
 
   private void startVisionThread() {
@@ -196,29 +195,6 @@ public class CameraSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     SBNTE.toBeSuspended.setBoolean(m_suspendProcessing);
     //SmartDashboard.putBoolean("Vision Will Be Suspended", m_suspendProcessing);
-    displayGripData();
-  }
-
-  private double[] defaultArray = new double[0];
-  private void displayGripData() {
-    double centersX[] = m_gripData.getEntry("centerX").getDoubleArray(defaultArray);
-
-    double centerX = 0;
-
-    if (centersX.length == 0) {
-      SBNTE.targetStatus.setString("No target found");
-    }
-    else if (centersX.length > 1) {
-      SBNTE.targetStatus.setString("Many targets found");
-    }
-    else {
-      SBNTE.targetStatus.setString("One target found");
-      centerX = centersX[0] - 160;
-    }
-
-    SBNTE.centerX.setDouble(centerX);
-    
-
   }
 
   /**

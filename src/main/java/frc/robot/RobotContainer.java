@@ -34,7 +34,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-  private final CameraSubsystem m_cameraSubsystem = new CameraSubsystem();
+  private final CameraSubsystemGRIP m_cameraSubsystem = new CameraSubsystemGRIP();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
 
   // OI controllers are defined here...

@@ -94,5 +94,18 @@ public final class Constants {
         public static final double kMaxTurnRateDegPerS = 100;
         public static final double kMaxTurnAccelDegPerSSquared = 300;    
     }
+
+    // Vision Constants
+    public static final class VisionConstants {
+        public static final int kImageWidth = 320;
+        public static final int kImageHeight = 240;
+
+        public static final double kGoalX = (double)kImageWidth / 2.0;
+        public static final double kGoalY = (double)kImageHeight / 2.0;
+
+        public static final String kGripNT = "GRIP/myContoursReport";
+        public static final String kCenterXKey = "centerX";
+        public static final String kCenterYKey = "centerY";
+    }
 }
 
