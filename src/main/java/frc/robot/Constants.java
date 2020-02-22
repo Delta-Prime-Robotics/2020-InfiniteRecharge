@@ -68,12 +68,14 @@ public final class Constants {
             public static final int LeftRight = 0;
             public static final int FightFlight = 1;
             public static final int TurnNeck = 2;
+            public static final int Throttle = 3;
         }
     }
 
     // Drive Constants
     public static final class DriveConstants {
         public static final double kMaxDriveOutput = 0.75;
+        public static final double kMinTurnValue = 0.51;
 
         public static final boolean kLeftEncoderReversed = true;
         public static final boolean kRightEncoderReversed = false;
@@ -100,14 +102,14 @@ public final class Constants {
     }
 
     public static final class AutoAim {
-        public static final double kP = 0.0535;
-        public static final double kI = 0.0;
+        public static final double kP = 0.0535;// * 0.45;
+        public static final double kI = 0.0; //0.0535 * 0.54  / 1.3;
         public static final double kD = 0;
 
         public static final double kOffsetRatio = .1;
 
-        public static final double kTurnTolerancePixel = 1;        // degrees
-        public static final double kTurnRateTolerancePxlPerS = 10;  // degrees per second
+        public static final double kTurnTolerancePxl = 3;        // pixels
+        public static final double kTurnRateTolerancePxlPerS = 10;  // pixels per second
 
         public static final double kMaxTurnRatePxlPerS = 100;
         public static final double kMaxTurnAccelPxlPerSecSqd = 300;  

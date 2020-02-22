@@ -79,8 +79,9 @@ public class RobotContainer {
     // Auto-Aim
     new JoystickButton(m_gamePad, GamePad.Buttons.B)
       .whenPressed(new AutoAimCommand(m_driveSubsystem, 
-      m_cameraSubsystem)); //m_driveSubsystem.getHeading() - 10)
-      //.withTimeout(1));
+      m_cameraSubsystem)
+      //.withTimeout(3)
+      );
 
     // Move intake system forward
     new JoystickButton(m_gamePad, GamePad.Buttons.LT)
@@ -104,6 +105,10 @@ public class RobotContainer {
       () -> -m_maverik.getRawAxis(JoystickConstants.Axis.FightFlight),
       () -> m_maverik.getRawAxis(JoystickConstants.Axis.TurnNeck))
     );
+
+    // m_driveSubsystem.setDefaultCommand(
+    //   new RunCommand(() -> m_driveSubsystem.arcadeDrive(0, m_maverik.getRawAxis(JoystickConstants.Axis.Throttle)), m_driveSubsystem)
+    // );
 
     // // Set Tank Drive as the default
     // m_driveSubsystem.setDefaultCommand(

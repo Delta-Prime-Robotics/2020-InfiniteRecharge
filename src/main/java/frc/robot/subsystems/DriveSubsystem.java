@@ -125,6 +125,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void arcadeDrive(double forward, double rotation) {
     m_diffDrive.arcadeDrive(forward, rotation);
+    //SmartDashboard.putNumber("ArcadeDrive-Rotation", rotation);
   }
 
   /**
@@ -144,12 +145,13 @@ public class DriveSubsystem extends SubsystemBase {
   public void autoTurn(double rotation) {
     SmartDashboard.putNumber("Passed Rotation", rotation);
 
-    if (rotation > 0.01 && rotation < 0.51) {
-      rotation = 0.51;
+    if (rotation > 0.01 && rotation < DriveConstants.kMinTurnValue) {
+      rotation = DriveConstants.kMinTurnValue;
     }
-    if (rotation < -0.01 && rotation > -0.51) {
-      rotation = -0.51;
+    if (rotation < -0.01 && rotation > -DriveConstants.kMinTurnValue) {
+      rotation = -DriveConstants.kMinTurnValue;
     }
+
     SmartDashboard.putNumber("Calc'ed Rotation", rotation);
 
     m_diffDrive.arcadeDrive(0, rotation);
@@ -260,7 +262,6 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     SmartDashboard.putBoolean("Collision Detected Y", collisionDetectedY);
-
   }
 }
 
