@@ -73,6 +73,8 @@ public final class Constants {
 
     // Drive Constants
     public static final class DriveConstants {
+        public static final double kMaxDriveOutput = 0.75;
+
         public static final boolean kLeftEncoderReversed = true;
         public static final boolean kRightEncoderReversed = false;
         
@@ -82,7 +84,9 @@ public final class Constants {
             (kWheelDiameterInches * Math.PI) / (double) kEncoderCPR;
 
         public static final boolean kGyroReversed = false;
+    }
 
+    public static final class TurnByAngle {
         // PID constants for turning the robot
         public static final double kTurnP = 0.0535;
         public static final double kTurnI = 0.0;
@@ -93,6 +97,20 @@ public final class Constants {
 
         public static final double kMaxTurnRateDegPerS = 100;
         public static final double kMaxTurnAccelDegPerSSquared = 300;    
+    }
+
+    public static final class AutoAim {
+        public static final double kP = 0.0535;
+        public static final double kI = 0.0;
+        public static final double kD = 0;
+
+        public static final double kOffsetRatio = .1;
+
+        public static final double kTurnTolerancePixel = 1;        // degrees
+        public static final double kTurnRateTolerancePxlPerS = 10;  // degrees per second
+
+        public static final double kMaxTurnRatePxlPerS = 100;
+        public static final double kMaxTurnAccelPxlPerSecSqd = 300;  
     }
 
     // Vision Constants

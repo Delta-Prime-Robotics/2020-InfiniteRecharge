@@ -19,7 +19,7 @@ import static frc.robot.Constants.*;
 
 public class TurnByAngleCommand extends PIDCommand {
   private DriveSubsystem m_drive;
-  private DoubleSupplier m_targetAngleDegrees;
+  //private DoubleSupplier m_targetAngleDegrees;
 
   /**
    * Creates a new TurnByAngleCommand.
@@ -29,7 +29,7 @@ public class TurnByAngleCommand extends PIDCommand {
   public TurnByAngleCommand(DriveSubsystem drive, DoubleSupplier targetAngleDegrees) {
     super(
         // The controller that the command will use
-        new PIDController(DriveConstants.kTurnP, DriveConstants.kTurnI, DriveConstants.kTurnD), 
+        new PIDController(TurnByAngle.kTurnP, TurnByAngle.kTurnI, TurnByAngle.kTurnD), 
         // Close loop on heading
         drive::getHeading, 
         // Set reference to target
@@ -40,14 +40,17 @@ public class TurnByAngleCommand extends PIDCommand {
         drive);
 
       m_drive = drive;
-      m_targetAngleDegrees = targetAngleDegrees;
+      //m_targetAngleDegrees = targetAngleDegrees;
       
       // Set the PID controller to be continuous (because it's an angle controller)
       getController().enableContinuousInput(-180, 180);
 
       // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
       // setpoint before it is considered as having reached the reference
-      getController().setTolerance(DriveConstants.kTurnToleranceDeg, DriveConstants.kTurnRateToleranceDegPerS);
+      getController().setTolerance(TurnByAngle.kTurnToleranceDeg, TurnByAngle.kTurnRateToleranceDegPerS);
+      
+    // Use addRequirements() here to declare subsystem dependencies.
+      addRequirements(m_drive);
   }
 
   @Override

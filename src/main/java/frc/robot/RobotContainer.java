@@ -9,13 +9,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants.GamePad.Buttons;
+
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -42,15 +42,11 @@ public class RobotContainer {
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   //private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_gamePad);
 
- 
- 
-
-
   /**
-   * The container for the robot.  Contains subsystems, OI devices, and commands.
+   * The container for the robot. Pulls together subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_driveSubsystem.setMaxOutput(0.75);
+    m_driveSubsystem.setMaxOutput(DriveConstants.kMaxDriveOutput);
 
     configureButtonBindings();
     
@@ -81,17 +77,17 @@ public class RobotContainer {
         () -> -m_gamePad.getRawAxis(JoystickConstants.Axis.FightFlight)));
 
     // Auto-Aim
-    new JoystickButton(m_gamePad, Buttons.B)
+    new JoystickButton(m_gamePad, GamePad.Buttons.B)
       .whenPressed(new AutoAimCommand(m_driveSubsystem, 
       m_cameraSubsystem)); //m_driveSubsystem.getHeading() - 10)
       //.withTimeout(1));
 
     // Move intake system forward
-    new JoystickButton(m_gamePad, Buttons.LT)
+    new JoystickButton(m_gamePad, GamePad.Buttons.LT)
       .whenHeld(new RunCommand(() -> m_intakeSubsystem.recharge(), m_intakeSubsystem));
 
     // Move intake system backward
-    new JoystickButton(m_gamePad, Buttons.RT)
+    new JoystickButton(m_gamePad, GamePad.Buttons.RT)
       .whenHeld(new RunCommand(() -> m_intakeSubsystem.discharge(), m_intakeSubsystem));
   }
 
