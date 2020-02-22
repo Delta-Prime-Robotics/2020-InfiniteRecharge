@@ -31,15 +31,19 @@ public class RobotContainer {
   // Set to true when we're at a competition to cut down on info on Shuffleboard
   private final Boolean m_atCompetition = false;
 
+  // OI controllers are defined here...
+  private final Joystick m_gamePad = new Joystick(Laptop.UsbPorts.GamePad);
+  private final Joystick m_maverik = new Joystick(Laptop.UsbPorts.Joystick);
+
   // The robot's subsystems and commands are defined here...
   private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   private final CameraSubsystemGRIP m_cameraSubsystem = new CameraSubsystemGRIP();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  //private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_gamePad);
 
-  // OI controllers are defined here...
-  private final Joystick m_gamePad = new Joystick(Laptop.UsbPorts.GamePad);
-  private final Joystick m_maverik = new Joystick(Laptop.UsbPorts.Joystick);
+ 
+ 
 
 
   /**
@@ -76,17 +80,11 @@ public class RobotContainer {
       .whenHeld(new DriveStraightCommand(m_driveSubsystem, 
         () -> -m_gamePad.getRawAxis(JoystickConstants.Axis.FightFlight)));
 
-    // Testing... turn 10 degrees 
-    new JoystickButton(m_gamePad, Buttons.X)
-      .whenPressed(new TurnByAngleCommand(m_driveSubsystem, 
-        () -> 0) // m_driveSubsystem.getHeading() + 10)
-      .withTimeout(1));
-
-    // Testing... turn -10 degrees
+    // Auto-Aim
     new JoystickButton(m_gamePad, Buttons.B)
-      .whenPressed(new TurnByAngleCommand(m_driveSubsystem, 
-      () -> 0) //m_driveSubsystem.getHeading() - 10)
-      .withTimeout(1));
+      .whenPressed(new AutoAimCommand(m_driveSubsystem, 
+      m_cameraSubsystem)); //m_driveSubsystem.getHeading() - 10)
+      //.withTimeout(1));
 
     // Move intake system forward
     new JoystickButton(m_gamePad, Buttons.LT)

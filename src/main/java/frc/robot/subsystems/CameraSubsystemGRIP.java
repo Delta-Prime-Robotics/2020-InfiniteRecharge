@@ -115,7 +115,7 @@ public class CameraSubsystemGRIP extends SubsystemBase {
     double centerX = getCenter(VisionConstants.kCenterXKey, logging);
 
     if (centerX >= 0) {
-      offsetX = centerX - VisionConstants.kGoalX;
+      offsetX = VisionConstants.kGoalX - centerX;
     }
 
     if (logging) {
@@ -136,7 +136,7 @@ public class CameraSubsystemGRIP extends SubsystemBase {
     double centerY = getCenter(VisionConstants.kCenterYKey, false); // Assumes centerX already logged the target status
 
     if (centerY >= 0) {
-      offsetY = centerY - VisionConstants.kGoalY;
+      offsetY = VisionConstants.kGoalY - centerY;
     }
 
     if (logging) {
