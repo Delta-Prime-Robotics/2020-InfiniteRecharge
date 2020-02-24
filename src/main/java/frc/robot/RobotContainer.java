@@ -33,7 +33,7 @@ public class RobotContainer {
 
   // OI controllers are defined here...
   private final Joystick m_gamePad = new Joystick(Laptop.UsbPorts.GamePad);
-  private final Joystick m_maverik = new Joystick(Laptop.UsbPorts.Joystick);
+  private final Joystick m_maverick = new Joystick(Laptop.UsbPorts.Joystick);
 
   // The robot's subsystems and commands are defined here...
   private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
@@ -72,7 +72,7 @@ public class RobotContainer {
     .whenPressed(() -> m_driveSubsystem.zeroHeading());
 
     // Testing... Drive Straight
-    new JoystickButton(m_maverik, 1)
+    new JoystickButton(m_maverick, 1)
       .whenHeld(new DriveStraightCommand(m_driveSubsystem, 
         () -> -m_gamePad.getRawAxis(JoystickConstants.Axis.FightFlight)));
 
@@ -102,8 +102,8 @@ public class RobotContainer {
     // Set Arcade Drive as the default
     m_driveSubsystem.setDefaultCommand(
       new ArcadeDriveCommand(m_driveSubsystem,
-      () -> -m_maverik.getRawAxis(JoystickConstants.Axis.FightFlight),
-      () -> m_maverik.getRawAxis(JoystickConstants.Axis.TurnNeck))
+      () -> -m_maverick.getRawAxis(JoystickConstants.Axis.FightFlight),
+      () -> m_maverick.getRawAxis(JoystickConstants.Axis.TurnNeck))
     );
 
     // m_driveSubsystem.setDefaultCommand(
