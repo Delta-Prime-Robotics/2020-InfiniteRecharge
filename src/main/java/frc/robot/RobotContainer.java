@@ -40,7 +40,7 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   private final CameraSubsystemGRIP m_cameraSubsystem = new CameraSubsystemGRIP();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  //private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_gamePad);
+  //private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_maverick);
 
   /**
    * The container for the robot. Pulls together subsystems, OI devices, and commands.
@@ -106,6 +106,7 @@ public class RobotContainer {
       () -> m_maverick.getRawAxis(JoystickConstants.Axis.TurnNeck))
     );
 
+    // Used to determine the minimum output needed for the robot to turn
     // m_driveSubsystem.setDefaultCommand(
     //   new RunCommand(() -> m_driveSubsystem.arcadeDrive(0, m_maverik.getRawAxis(JoystickConstants.Axis.Throttle)), m_driveSubsystem)
     // );
