@@ -41,6 +41,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   private DifferentialDrive m_diffDrive;
 
+  private  VictorSP m_controlPanelMotor  = new VictorSP(RoboRio.PwmPorts.ControlPanelMotor);  
+
   // Encoders
   private Encoder m_leftEncoder = new Encoder(RoboRio.DioPorts.LeftEncoderA, 
                                               RoboRio.DioPorts.LeftEncoderB, 
@@ -165,6 +167,22 @@ public class DriveSubsystem extends SubsystemBase {
     this.resetEncoders();
   }
   /**
+   * Sping the motor for the control panel
+   * 
+   */
+  public void SpinControlPanel() {
+    this.m_controlPanelMotor.setSpeed(.5);
+  }
+
+ /**
+   * Stop the motor for the control panel
+   * 
+   */
+  public void StopControlPanel() {
+    this.m_controlPanelMotor.stopMotor();
+  }
+
+  /**
    * Drives the robot in a straight line
    * @param forward the forward movement speed
    */
@@ -183,6 +201,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_diffDrive.setMaxOutput(maxOutput);
   }
   
+
   /**
    * Resets both drive encoders to zero
    */
@@ -190,6 +209,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_leftEncoder.reset();
     m_rightEncoder.reset();
   }
+
 
   /**
    * Get the distance from the left encoder

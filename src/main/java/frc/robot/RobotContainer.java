@@ -76,6 +76,12 @@ public class RobotContainer {
       .whenHeld(new DriveStraightCommand(m_driveSubsystem, 
         () -> -m_gamePad.getRawAxis(JoystickConstants.Axis.FightFlight)));
 
+       // Testing... ControlPanelSpinner
+       new JoystickButton(m_gamePad, GamePad.Buttons.X)
+       .whenHeld(new ControlPanelCommand(m_driveSubsystem, 
+       () -> -m_maverick.getRawAxis(JoystickConstants.Axis.FightFlight),
+       () -> m_maverick.getRawAxis(JoystickConstants.Axis.TurnNeck)));
+
     // Auto-Aim
     new JoystickButton(m_gamePad, GamePad.Buttons.B)
       .whenPressed(new AutoAimCommand(m_driveSubsystem, 

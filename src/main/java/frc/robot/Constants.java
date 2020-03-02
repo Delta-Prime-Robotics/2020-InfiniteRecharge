@@ -11,12 +11,13 @@ public final class Constants {
     // Connections to the RoboRio
     public static final class RoboRio {
         public final class PwmPorts {
-            public static final int RightRearMotor = 2;
-            public static final int RightFrontMotor = 3;
-            public static final int LeftRearMotor = 0;
-            public static final int LeftFrontMotor = 1;
+            public static final int RightRearMotor = 0;
+            public static final int RightFrontMotor = 1;
+            public static final int LeftRearMotor = 2;
+            public static final int LeftFrontMotor = 3;
+            public static final int ControlPanelMotor = 4;
 
-            public static final int IntakeMotor = 9;
+            public static final int IntakeMotor = 5;
         }
         public final class DioPorts {
             public static final int RightEncoderA = 0;
