@@ -38,9 +38,14 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void recharge() {
+    m_mControl.setSpeed(-0.5);
+  }
+
+  public void discharge() {
     m_mControl.setSpeed(0.5);
   }
-  public void discharge() {
-    m_mControl.setSpeed(-0.5);
+
+  public void stop() {
+    m_mControl.setSpeed(0);
   }
 }

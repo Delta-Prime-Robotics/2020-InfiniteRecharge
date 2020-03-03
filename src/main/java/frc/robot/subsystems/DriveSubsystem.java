@@ -41,7 +41,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   private DifferentialDrive m_diffDrive;
 
-  private  VictorSP m_controlPanelMotor  = new VictorSP(RoboRio.PwmPorts.ControlPanelMotor);  
+  
 
   // Encoders
   private Encoder m_leftEncoder = new Encoder(RoboRio.DioPorts.LeftEncoderA, 
@@ -166,21 +166,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void initDriveStraight() {
     this.resetEncoders();
   }
-  /**
-   * Sping the motor for the control panel
-   * 
-   */
-  public void SpinControlPanel() {
-    this.m_controlPanelMotor.setSpeed(.5);
-  }
-
- /**
-   * Stop the motor for the control panel
-   * 
-   */
-  public void StopControlPanel() {
-    this.m_controlPanelMotor.stopMotor();
-  }
+  
 
   /**
    * Drives the robot in a straight line

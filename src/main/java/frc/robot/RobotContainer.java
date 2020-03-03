@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import frc.robot.commands.*;
@@ -36,11 +37,12 @@ public class RobotContainer {
   private final Joystick m_maverick = new Joystick(Laptop.UsbPorts.Joystick);
 
   // The robot's subsystems and commands are defined here...
-  private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
+  //private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-  private final CameraSubsystemGRIP m_cameraSubsystem = new CameraSubsystemGRIP();
+  private final CameraSubsystemRPi m_cameraSubsystem = new CameraSubsystemRPi();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  //private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_gamePad);
+  private final ColorWheelSubsystem m_colorWheelSubsystem = new ColorWheelSubsystem();
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_maverick);
 
   /**
    * The container for the robot. Pulls together subsystems, OI devices, and commands.
@@ -76,26 +78,28 @@ public class RobotContainer {
       .whenHeld(new DriveStraightCommand(m_driveSubsystem, 
         () -> -m_gamePad.getRawAxis(JoystickConstants.Axis.FightFlight)));
 
-       // Testing... ControlPanelSpinner
-       new JoystickButton(m_gamePad, GamePad.Buttons.X)
-       .whenHeld(new ControlPanelCommand(m_driveSubsystem, 
-       () -> -m_maverick.getRawAxis(JoystickConstants.Axis.FightFlight),
-       () -> m_maverick.getRawAxis(JoystickConstants.Axis.TurnNeck)));
+    // Testing... ControlPanelSpinner
+    new JoystickButton(m_gamePad, GamePad.Buttons.X)
+       .whenHeld(new ControlPanelCommand(m_colorWheelSubsystem));
 
     // Auto-Aim
     new JoystickButton(m_gamePad, GamePad.Buttons.B)
-      .whenPressed(new AutoAimCommand(m_driveSubsystem, 
-      m_cameraSubsystem)
+      .whenPressed(new AutoAimCommand(m_driveSubsystem, m_cameraSubsystem)
       //.withTimeout(3)
       );
 
-    // Move intake system forward
-    new JoystickButton(m_gamePad, GamePad.Buttons.LT)
-      .whenHeld(new RunCommand(() -> m_intakeSubsystem.recharge(), m_intakeSubsystem));
-
     // Move intake system backward
+    new JoystickButton(m_gamePad, GamePad.Buttons.LT)
+      .whenHeld(new IntakeOutCommand(m_intakeSubsystem));
+
+    // Move intake system forward
     new JoystickButton(m_gamePad, GamePad.Buttons.RT)
-      .whenHeld(new RunCommand(() -> m_intakeSubsystem.discharge(), m_intakeSubsystem));
+    .whenHeld(new IntakeInCommand(m_intakeSubsystem));
+
+    // Turn the LED Ring On
+    new JoystickButton(m_maverick, 2)
+      .whenPressed(new InstantCommand(() -> m_cameraSubsystem.toggleLight()));
+
   }
 
   /**
@@ -138,7 +142,7 @@ public class RobotContainer {
     m_cameraSubsystem.setUpShuffleboard(teleopTab, m_atCompetition);
     m_driveSubsystem.setUpShuffleboard(teleopTab, m_atCompetition);
     m_intakeSubsystem.setUpShuffleboard(teleopTab, m_atCompetition);
-    m_pdpSubsystem.setUpShuffleboard(teleopTab, m_atCompetition);
+    //m_pdpSubsystem.setUpShuffleboard(teleopTab, m_atCompetition);
   }
 
   /**

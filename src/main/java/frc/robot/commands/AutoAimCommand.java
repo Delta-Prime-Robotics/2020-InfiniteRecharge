@@ -19,12 +19,12 @@ import static frc.robot.Constants.*;
  */
 public class AutoAimCommand extends PIDCommand {
   private DriveSubsystem m_drive;
-  private CameraSubsystemGRIP m_cameras;
+  private CameraSubsystemRPi m_cameras;
 
   /**
    * Creates a new AutoAimCommand.
    */
-  public AutoAimCommand(DriveSubsystem drive, CameraSubsystemGRIP cameras) {
+  public AutoAimCommand(DriveSubsystem drive, CameraSubsystemRPi cameras) {
     super(
         // The controller that the command will use
         new PIDController(AutoAim.kP, AutoAim.kI, AutoAim.kD),

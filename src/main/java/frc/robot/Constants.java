@@ -28,6 +28,7 @@ public final class Constants {
         public final class CanIDs {
             public static final int LeftsparkMax = 11;
             public static final int RightsparkMax = 12;
+            public static final int PCM = 0;
         }
     }
 
@@ -127,6 +128,8 @@ public final class Constants {
         public static final String kGripNT = "GRIP/myContoursReport";
         public static final String kCenterXKey = "centerX";
         public static final String kCenterYKey = "centerY";
+
+        public static final int kLightSwitch = 0;
     }
 }
 

@@ -8,18 +8,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ColorWheelSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
-public class ControlPanelCommand extends CommandBase {
-  private final ColorWheelSubsystem m_powerRanger;
-  
+public class IntakeInCommand extends CommandBase {
+  private IntakeSubsystem m_intake;
   /**
-   * Creates a new DefaultDrive.
+   * Creates a new IntakeInCommand.
    */
-  public ControlPanelCommand(ColorWheelSubsystem subsystem) {
-    m_powerRanger = subsystem;
+  public IntakeInCommand(IntakeSubsystem intake) {
+    m_intake = intake;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_powerRanger);
+    addRequirements(m_intake);
   }
 
   // Called when the command is initially scheduled.
@@ -30,13 +29,13 @@ public class ControlPanelCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_powerRanger.SpinControlPanel();
+    m_intake.recharge();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_powerRanger.StopControlPanel();
+    m_intake.stop();
   }
 
   // Returns true when the command should end.
@@ -45,4 +44,3 @@ public class ControlPanelCommand extends CommandBase {
     return false;
   }
 }
-

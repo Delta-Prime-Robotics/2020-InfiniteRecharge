@@ -33,6 +33,8 @@ public class ShooterSubsystem extends SubsystemBase {
   // temporary to allow for testing appropriate velocity
   private Joystick m_maverick;
 
+  private int m_increment = 0;
+
   /**
    * Creates a new ShooterSubsystem.
    */
@@ -129,6 +131,9 @@ public class ShooterSubsystem extends SubsystemBase {
     //   m_lPidController.setOutputRange(min, max); 
     //   kMinOutput = min; kMaxOutput = max;
     //}
+
+    m_increment++;
+    SmartDashboard.putNumber("Shooter periodic", m_increment);
 
     // Set the set point based on the throttle position
     double setPoint = m_maverick.getRawAxis(JoystickConstants.Axis.Throttle)*maxRPM;
