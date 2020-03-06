@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-
+import frc.robot.Constants.GamePad;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -42,7 +42,7 @@ public class RobotContainer {
   private final CameraSubsystemRPi m_cameraSubsystem = new CameraSubsystemRPi();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   private final ColorWheelSubsystem m_colorWheelSubsystem = new ColorWheelSubsystem();
-  //private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_maverick);
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_maverick);
 
   /**
    * The container for the robot. Pulls together subsystems, OI devices, and commands.
@@ -88,13 +88,7 @@ public class RobotContainer {
       //.withTimeout(3)
       );
 
-    // Move intake system backward
-    new JoystickButton(m_gamePad, GamePad.Buttons.LT)
-      .whenHeld(new IntakeOutCommand(m_intakeSubsystem));
-
-    // Move intake system forward
-    new JoystickButton(m_gamePad, GamePad.Buttons.RT)
-    .whenHeld(new IntakeInCommand(m_intakeSubsystem));
+    
 
     // Turn the LED Ring On
     new JoystickButton(m_maverick, 2)
@@ -116,6 +110,10 @@ public class RobotContainer {
       () -> m_maverick.getRawAxis(JoystickConstants.Axis.TurnNeck))
     );
 
+
+    m_intakeSubsystem.setDefaultCommand(
+      new RunCommand(()->m_intakeSubsystem.setSpeed(m_gamePad.getRawAxis(GamePad.Axis.LeftStickUpDown)), 
+      m_intakeSubsystem));
     // Used to determine the minimum output needed for the robot to turn
     // m_driveSubsystem.setDefaultCommand(
     //   new RunCommand(() -> m_driveSubsystem.arcadeDrive(0, m_maverik.getRawAxis(JoystickConstants.Axis.Throttle)), m_driveSubsystem)

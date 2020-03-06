@@ -132,8 +132,8 @@ public class ShooterSubsystem extends SubsystemBase {
     //   kMinOutput = min; kMaxOutput = max;
     //}
 
-    m_increment++;
-    SmartDashboard.putNumber("Shooter periodic", m_increment);
+    // m_increment++;
+    // SmartDashboard.putNumber("Shooter periodic", m_increment);
 
     // Set the set point based on the throttle position
     double setPoint = m_maverick.getRawAxis(JoystickConstants.Axis.Throttle)*maxRPM;

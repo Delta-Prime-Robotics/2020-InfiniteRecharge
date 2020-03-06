@@ -45,6 +45,11 @@ public class IntakeSubsystem extends SubsystemBase {
     m_mControl.setSpeed(0.5);
   }
 
+  public void setSpeed(double speed){
+    m_mControl.setSpeed(speed);
+
+  }
+
   public void stop() {
     m_mControl.setSpeed(0);
   }
