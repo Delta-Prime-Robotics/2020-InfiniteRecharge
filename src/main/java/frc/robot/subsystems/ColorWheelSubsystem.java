@@ -85,16 +85,16 @@ public class ColorWheelSubsystem extends SubsystemBase {
 
     if (match.color == kBlueTarget) {
       colorString = "Blue";
-      setting = "Red";
+      setting = "Green";
     } else if (match.color == kRedTarget) {
       colorString = "Red";
-      setting = "Blue";
+      setting = "Yellow";
     } else if (match.color == kGreenTarget) {
       colorString = "Green";
-      setting = "Yellow";
+      setting = "Blue";
     } else if (match.color == kYellowTarget) {
       colorString = "Yellow";
-      setting = "Green";
+      setting = "Red";
     } else {
       colorString = "Unknown";
       setting = "Unknown";

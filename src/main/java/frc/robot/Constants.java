@@ -81,8 +81,8 @@ public final class Constants {
         public static final double kMaxDriveOutput = 0.75;
         public static final double kMinTurnValue = 0.51;
 
-        public static final boolean kLeftEncoderReversed = true;
-        public static final boolean kRightEncoderReversed = false;
+        public static final boolean kLeftEncoderReversed = false;
+        public static final boolean kRightEncoderReversed = true;
         
         public static final int kEncoderCPR = 360;
         public static final double kWheelDiameterInches = 6;
@@ -153,7 +153,7 @@ public final class Constants {
 
         public static final double kMaxRPM = 5700;
 
-        public static final double kDeadzone = 0.05;
+        public static final double kDeadzone = 0.1;
     }
 
     public static final class ColorWheelConstants {

@@ -103,10 +103,14 @@ public class RobotContainer {
     new POVButton(m_gamePad, 0)
       .whenPressed(new PrintCommand("Target killed")
     );
+    new POVButton(m_gamePad, 90).whenPressed(new PrintCommand("POV 90"));
+    new POVButton(m_gamePad, 180).whenPressed(new PrintCommand("POV 180"));
+    new POVButton(m_gamePad, 270).whenPressed(new PrintCommand("POV 270"));
 
     // testing... driving to distance via encoders
     new JoystickButton(m_gamePad, GamePad.Buttons.Start)
-      .whenPressed(new DriveNoHandsCommand(m_driveSubsystem, 10)
+      .whenPressed(new DriveNoHandsCommand(m_driveSubsystem, 30)
+      .withTimeout(0.5)
     );
 
     // Run the climber
@@ -168,13 +172,17 @@ public class RobotContainer {
    * Set up the Chooser on the 
    */
   private void setUpAutonomousChooser() {
+    Command planCDistance = new DriveNoHandsCommand(m_driveSubsystem, 30)
+      .withTimeout(0.5);
+
     Command planCTimeout = new StartEndCommand(
         () -> m_driveSubsystem.arcadeDrive(-0.4, 0), 
         () -> m_driveSubsystem.stop(),
         m_driveSubsystem)
       .withTimeout(0.5);
 
-    m_autonomousChooser.setDefaultOption("Plan C - Timeout", planCTimeout);
+    m_autonomousChooser.setDefaultOption("Plan C - Distance", planCDistance);
+    m_autonomousChooser.addOption("Plan C - Timeout", planCTimeout);
     m_autonomousChooser.addOption("Do Nothing", null);
     SmartDashboard.putData("Autonomous", m_autonomousChooser);
   }
