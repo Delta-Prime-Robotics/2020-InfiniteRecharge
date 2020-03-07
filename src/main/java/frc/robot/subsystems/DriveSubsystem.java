@@ -78,10 +78,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   /**
    * Sets up Shuffleboard for this subsystem
-   * @param teleopTab The main tab used during teleop
    * @param atCompetition Whether to exclude testing info from Shuffleboard
    */
-  public void setUpShuffleboard(ShuffleboardTab teleopTab, Boolean atCompetition) {
+  public void setUpShuffleboard(Boolean atCompetition) {
 
     if (!atCompetition) {
       ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");

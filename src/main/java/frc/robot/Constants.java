@@ -131,5 +131,17 @@ public final class Constants {
 
         public static final int kLightSwitch = 0;
     }
+
+    public static final class ShooterConstants {
+        // PID values for the shooter's closed loop velocity PID 
+        public static final double kP = 5e-5;
+        public static final double kI = 1e-6;
+        public static final double kD = 0;
+
+        public static final double kMinOutput = -1;
+        public static final double kMaxOutput = 1;
+
+        public static final double kMaxRPM = 5700;
+    }
 }
 

@@ -7,9 +7,12 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.shuffleboard.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,7 +23,8 @@ import static frc.robot.Constants.*;
  * Camera subsystem for processing Vision on the Driver Station (w/GRIP)
  */
 public class CameraSubsystemRPi extends SubsystemBase {
-  //private UsbCamera m_shooterCam;
+  @SuppressWarnings("unused") //The intake camera is just sending a stream. It doesn't need to be "used" in the code
+  private UsbCamera m_intakeCam;
 
   private NetworkTable m_piData;
 
@@ -30,24 +34,34 @@ public class CameraSubsystemRPi extends SubsystemBase {
    * Creates a new CameraSubsystem.
    */
   public CameraSubsystemRPi() {
+    try {
+      m_intakeCam = CameraServer.getInstance().startAutomaticCapture("ShooterCam", 0);
+      //m_intakeCam.setResolution(VisionConstants.kImageWidth, VisionConstants.kImageHeight);
+    }
+    catch (Exception ex) {
+      DriverStation.reportError("Error instantiating USB Camera 0" + ex.getMessage(), true);
+    }
+
     m_piData = NetworkTableInstance.getDefault().getTable(VisionConstants.kGripNT);
   }
 
   // Shuffleboard Network Table Entries (for updating values) 
   private static class SBNTE {
     public static NetworkTableEntry targetStatus;
+    public static NetworkTableEntry targetCount;
     public static NetworkTableEntry centerX;
     public static NetworkTableEntry centerY;
     public static NetworkTableEntry offsetX;
     public static NetworkTableEntry offsetY;
+    public static NetworkTableEntry angleX;
+    public static NetworkTableEntry angleY;
   }
 
   /**
    * Sets up Shuffleboard for this subsystem
-   * @param teleopTab The main tab used during teleop
    * @param atCompetition Whether to exclude testing info from Shuffleboard
    */
-  public void setUpShuffleboard(ShuffleboardTab teleopTab, Boolean atCompetition) {
+  public void setUpShuffleboard(Boolean atCompetition) {
 
     if (!atCompetition) {
       ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
@@ -55,6 +69,8 @@ public class CameraSubsystemRPi extends SubsystemBase {
       ShuffleboardLayout targetInfo = visionTab.getLayout("Target Info", BuiltInLayouts.kList);
       
       SBNTE.targetStatus = targetInfo.add("Status", "Initializing...")
+        .getEntry();
+      SBNTE.centerX = targetInfo.add("Target Count", 0.0)
         .getEntry();
       SBNTE.centerX = targetInfo.add("Center X", 0.0)
         .getEntry();
@@ -64,6 +80,10 @@ public class CameraSubsystemRPi extends SubsystemBase {
         .getEntry();
       SBNTE.offsetY = targetInfo.add("Offset Y", 0.0)
         .getEntry();
+      SBNTE.angleX = targetInfo.add("Angle X", 0.0)
+        .getEntry();
+      SBNTE.angleY = targetInfo.add("Angle Y", 0.0)
+        .getEntry();
     }
   }
 
@@ -72,8 +92,15 @@ public class CameraSubsystemRPi extends SubsystemBase {
     // This method will be called once per scheduler run
     
     if (SBNTE.targetStatus != null) {
-      Integer targetCount = m_piData.getEntry("ct").getNumber(0).intValue();
-      putTargetStatus(targetCount);
+      Number targetCount = m_piData.getEntry("ct").getNumber(0);
+      putTargetStatus(targetCount.intValue());
+      SBNTE.targetCount.setNumber(targetCount);
+      SBNTE.centerX.setNumber(m_piData.getEntry("cx").getNumber(0));
+      SBNTE.centerY.setNumber(m_piData.getEntry("cy").getNumber(0));
+      SBNTE.offsetX.setNumber(m_piData.getEntry("nx").getNumber(0));
+      SBNTE.offsetY.setNumber(m_piData.getEntry("ny").getNumber(0));
+      SBNTE.angleX.setNumber(m_piData.getEntry("tx").getNumber(0));
+      SBNTE.angleY.setNumber(m_piData.getEntry("ty").getNumber(0));
     }
   }
 

@@ -8,27 +8,26 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
 
 
 public class IntakeSubsystem extends SubsystemBase {
 
-  private VictorSP m_mControl = new VictorSP(RoboRio.PwmPorts.IntakeMotor);
+  private VictorSP m_motor = new VictorSP(RoboRio.PwmPorts.IntakeMotor);
   /**
    * Creates a new IntakeSubsystem.
    */
   public IntakeSubsystem() {
-  
+    addChild("Motor", m_motor);
   }
   
   /**
    * Sets up Shuffleboard for this subsystem
-   * @param teleopTab The main tab used during teleop
    * @param atCompetition Whether to exclude testing info from Shuffleboard
    */
-  public void setUpShuffleboard(ShuffleboardTab teleopTab, Boolean atCompetition) {
+  public void setUpShuffleboard(Boolean atCompetition) {
     // ToDo: add specific info about this subsystem
   }
 
@@ -38,19 +37,25 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void recharge() {
-    m_mControl.setSpeed(-0.5);
+    m_motor.setSpeed(-0.5);
   }
 
   public void discharge() {
-    m_mControl.setSpeed(0.5);
+    m_motor.setSpeed(0.5);
   }
 
+  /**
+   * Set the motor controller to the specified speed.
+   * @param speed
+   */
   public void setSpeed(double speed){
-    m_mControl.setSpeed(speed);
-
+    // Make sure speed is between -1 and 1
+    speed = Math.max(Math.min(speed, 1), -1);
+    SmartDashboard.putNumber("Intake speed", speed);
+    m_motor.setSpeed(speed);
   }
 
   public void stop() {
-    m_mControl.setSpeed(0);
+    m_motor.setSpeed(0);
   }
 }
