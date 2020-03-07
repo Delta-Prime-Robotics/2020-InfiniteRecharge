@@ -18,6 +18,8 @@ public final class Constants {
             public static final int ControlPanelMotor = 4;
 
             public static final int IntakeMotor = 5;
+
+            public static final int ClimberMotor = 6;
         }
         public final class DioPorts {
             public static final int RightEncoderA = 0;
@@ -58,7 +60,7 @@ public final class Constants {
             public static final int LT = 7;
             public static final int RT = 8;
             // public static final int Back = 9;
-            // public static final int Start = 10;
+            public static final int Start = 10;
             // public static final int LeftJoyStickClick = 11;
             // public static final int RightJoyStickClick = 12;
         }
@@ -108,9 +110,17 @@ public final class Constants {
         public static final double kI = 0.0; //0.0535 * 0.54  / 1.3;
         public static final double kD = 0;
 
-        public static final double kOffsetRatio = .1;
+        public static final double kOffsetRatio = 1;
 
-        public static final double kTurnTolerancePxl = 3;        // pixels
+        public static final double kTurnToleranceDeg = 3;           // degrees
+        public static final double kTurnRateToleranceDegPerS = 10;  // degrees per second
+
+        public static final double kMaxTurnRateDegPerS = 100;
+        public static final double kMaxTurnAccelDegPerSecSqd = 300;  
+
+        public static final double kPxlOffsetRatio = .1;
+
+        public static final double kTurnTolerancePxl = 3;           // pixels
         public static final double kTurnRateTolerancePxlPerS = 10;  // pixels per second
 
         public static final double kMaxTurnRatePxlPerS = 100;
@@ -142,6 +152,13 @@ public final class Constants {
         public static final double kMaxOutput = 1;
 
         public static final double kMaxRPM = 5700;
+
+        public static final double kDeadzone = 0.05;
+    }
+
+    public static final class ColorWheelConstants {
+        public static final double kDeadzone = 0.1;
+        public static final double kSpeedScaling = 0.5;
     }
 }
 

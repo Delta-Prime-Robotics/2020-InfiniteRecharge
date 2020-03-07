@@ -14,8 +14,8 @@ import static frc.robot.Constants.*;
 
 
 public class IntakeSubsystem extends SubsystemBase {
-
   private VictorSP m_motor = new VictorSP(RoboRio.PwmPorts.IntakeMotor);
+  
   /**
    * Creates a new IntakeSubsystem.
    */

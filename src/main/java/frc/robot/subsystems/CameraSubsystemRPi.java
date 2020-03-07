@@ -70,7 +70,7 @@ public class CameraSubsystemRPi extends SubsystemBase {
       
       SBNTE.targetStatus = targetInfo.add("Status", "Initializing...")
         .getEntry();
-      SBNTE.centerX = targetInfo.add("Target Count", 0.0)
+      SBNTE.targetCount = targetInfo.add("Target Count", 0.0)
         .getEntry();
       SBNTE.centerX = targetInfo.add("Center X", 0.0)
         .getEntry();
@@ -124,6 +124,10 @@ public class CameraSubsystemRPi extends SubsystemBase {
     SBNTE.targetStatus.setString(status);
   }
 
+  public double getAngleX() {
+    return m_piData.getEntry("tx").getDouble(0);
+  }
+  
   public double getOffsetX() {
     return m_piData.getEntry("nx").getDouble(0);
   }

@@ -29,7 +29,7 @@ public class AutoAimCommand extends PIDCommand {
         // The controller that the command will use
         new PIDController(AutoAim.kP, AutoAim.kI, AutoAim.kD),
         // This should return the measurement
-        cameras::getOffsetX,
+        cameras::getAngleX,
         // This should return the setpoint (can also be a constant)
         () -> 0,
         // This uses the output
@@ -42,7 +42,7 @@ public class AutoAimCommand extends PIDCommand {
 
     // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
     // setpoint before it is considered as having reached the reference
-    getController().setTolerance(AutoAim.kTurnTolerancePxl, AutoAim.kTurnRateTolerancePxlPerS);
+    getController().setTolerance(AutoAim.kTurnToleranceDeg, AutoAim.kTurnRateToleranceDegPerS);
 
     m_drive = drive;
     m_cameras = cameras;

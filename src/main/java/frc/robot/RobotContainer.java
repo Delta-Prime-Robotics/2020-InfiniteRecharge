@@ -10,9 +10,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.Constants.GamePad;
@@ -42,6 +46,9 @@ public class RobotContainer {
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   //private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
   private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_maverick);
+  private final MonkeySpiritSubsystem m_monkeySpiritSubsystem = new MonkeySpiritSubsystem();
+
+  SendableChooser<Command> m_autonomousChooser = new SendableChooser<>();
 
   /**
    * The container for the robot. Pulls together subsystems, OI devices, and commands.
@@ -64,35 +71,55 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
    
-    // Reset drive system encoders
-    new JoystickButton(m_gamePad, GamePad.Buttons.A)
-       .whenPressed(() -> m_driveSubsystem.resetEncoders());
-
-    // Reset drive system gyro
-    new JoystickButton(m_gamePad, GamePad.Buttons.Y)
-    .whenPressed(() -> m_driveSubsystem.zeroHeading());
-
-    // Testing... Drive Straight
+    // Drive Straight
     new JoystickButton(m_maverick, 1)
       .whenHeld(new DriveStraightCommand(m_driveSubsystem, 
-        () -> -m_gamePad.getRawAxis(JoystickConstants.Axis.FightFlight)));
+        () -> -m_gamePad.getRawAxis(JoystickConstants.Axis.FightFlight)
+      )
+    );
 
-    // ControlPanelSpinner
-    new JoystickButton(m_gamePad, GamePad.Buttons.X)
-       .whenHeld(new ControlPanelCommand(m_colorWheelSubsystem));
+    // Reset drive system encoders
+    new JoystickButton(m_gamePad, GamePad.Buttons.RB)
+      .whenPressed(() -> m_driveSubsystem.resetEncoders()
+    );
+
+    // Reset drive system gyro
+    new JoystickButton(m_gamePad, GamePad.Buttons.LB)
+      .whenPressed(() -> m_driveSubsystem.zeroHeading()
+    );
 
     // Auto-Aim
     new JoystickButton(m_gamePad, GamePad.Buttons.B)
       .whenPressed(new AutoAimCommand(m_driveSubsystem, m_cameraSubsystem)
       .withTimeout(3)
-      );
+    );
 
     // Turn the LED Ring On
     new JoystickButton(m_maverick, 2)
-      .whenPressed(new InstantCommand(() -> m_cameraSubsystem.toggleLight()));
+      .whenPressed(new InstantCommand(() -> m_cameraSubsystem.toggleLight())
+    );
 
+    // testing... POV buttons
+    new POVButton(m_gamePad, 0)
+      .whenPressed(new PrintCommand("Target killed")
+    );
+
+    // testing... driving to distance via encoders
+    new JoystickButton(m_gamePad, GamePad.Buttons.Start)
+      .whenPressed(new DriveNoHandsCommand(m_driveSubsystem, 10)
+    );
+
+    // Run the climber
+    new JoystickButton(m_gamePad, GamePad.Buttons.A)
+      .whenHeld(new RunCommand(() -> m_monkeySpiritSubsystem.Climb(), m_monkeySpiritSubsystem)
+    );
+
+    // Reset the counter for the color wheel
+    new JoystickButton(m_gamePad, GamePad.Buttons.X)
+      .whenPressed(new InstantCommand(() -> m_colorWheelSubsystem.startCounting())
+    );
   }
-
+  
   /**
    * Use this method to set the default commands for subsystems
    * Default commands can be explicit command classes, inline or use one of the
@@ -109,7 +136,13 @@ public class RobotContainer {
 
     m_intakeSubsystem.setDefaultCommand(
       new RunCommand(()->m_intakeSubsystem.setSpeed(m_gamePad.getRawAxis(GamePad.Axis.LeftStickUpDown)), 
-      m_intakeSubsystem));
+      m_intakeSubsystem)
+    );
+    
+    m_colorWheelSubsystem.setDefaultCommand(
+      new RunCommand(()->m_colorWheelSubsystem.lightTravel(m_gamePad.getRawAxis(GamePad.Axis.RightStickLeftRight)), 
+      m_colorWheelSubsystem)
+    );
 
     // Used to determine the minimum output needed for the robot to turn
     // m_driveSubsystem.setDefaultCommand(
@@ -121,6 +154,8 @@ public class RobotContainer {
    * Sets up Shuffleboard, deferring to each subsystem to add their components
    */
   private void setUpShuffleboard() {
+    setUpAutonomousChooser();
+
     m_cameraSubsystem.setUpShuffleboard(m_atCompetition);
     m_colorWheelSubsystem.setUpShuffleboard(m_atCompetition);
     m_driveSubsystem.setUpShuffleboard(m_atCompetition);
@@ -130,17 +165,25 @@ public class RobotContainer {
   }
 
   /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   * @return the command to run in autonomous
+   * Set up the Chooser on the 
    */
-  public Command getAutonomousCommand() {
-    //To do: replace with autonomous command or value from chooser if > 1
-    Command planC = new StartEndCommand(
+  private void setUpAutonomousChooser() {
+    Command planCTimeout = new StartEndCommand(
         () -> m_driveSubsystem.arcadeDrive(-0.4, 0), 
         () -> m_driveSubsystem.stop(),
         m_driveSubsystem)
       .withTimeout(0.5);
 
-    return planC;
+    m_autonomousChooser.setDefaultOption("Plan C - Timeout", planCTimeout);
+    m_autonomousChooser.addOption("Do Nothing", null);
+    SmartDashboard.putData("Autonomous", m_autonomousChooser);
+  }
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    return m_autonomousChooser.getSelected();
   }
 }

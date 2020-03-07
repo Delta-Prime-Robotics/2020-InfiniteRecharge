@@ -46,7 +46,11 @@ public class ColorWheelSubsystem extends SubsystemBase {
   private final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
   private final Color kRedTarget = ColorMatch.makeColor(0.43, 0.36, 0.20);
   private final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
-  
+
+  // Keep track of how many times we've moved onto a blue segment
+  private int m_blueCounter = 0;
+  private Color m_lastColor = kBlueTarget;
+
   /**
    * Creates a new ColorWheelSubsystem.
    */
@@ -96,6 +100,10 @@ public class ColorWheelSubsystem extends SubsystemBase {
       setting = "Unknown";
     }
 
+    if (match.color == kBlueTarget && m_lastColor != kBlueTarget) {
+      m_blueCounter++;
+    } 
+    m_lastColor = match.color;
     
     // Put sensor info on SmartDashboard
     SmartDashboard.putNumber("Red", detectedColor.red);
@@ -104,6 +112,7 @@ public class ColorWheelSubsystem extends SubsystemBase {
     
     SmartDashboard.putString("Detected Color", colorString);
     SmartDashboard.putString("Set Color", setting);
+    SmartDashboard.putNumber("Blue counter", m_blueCounter);
 
     SmartDashboard.putNumber("Confidence", match.confidence);
 
@@ -117,14 +126,31 @@ public class ColorWheelSubsystem extends SubsystemBase {
   /**
    * Spin the motor for the control panel
    */
-  public void SpinControlPanel() {
+  public void spinControlPanel() {
     this.m_controlPanelMotor.setSpeed(.5);
   }
 
  /**
    * Stop the motor for the control panel
    */
-  public void StopControlPanel() {
+  public void stopControlPanel() {
     this.m_controlPanelMotor.stopMotor();
+  }
+
+  /**
+   * Spin the motor for the control panel at the specified speed
+   * @param speed
+   */
+  public void lightTravel(double speed) {
+    // Set a deadzone for the OI control
+    if (Math.abs(speed) < ColorWheelConstants.kDeadzone) {
+      speed = 0.0;
+    }
+
+    this.m_controlPanelMotor.setSpeed(speed * ColorWheelConstants.kSpeedScaling);
+  }
+
+  public void startCounting(){
+    m_blueCounter = 0;
   }
 }

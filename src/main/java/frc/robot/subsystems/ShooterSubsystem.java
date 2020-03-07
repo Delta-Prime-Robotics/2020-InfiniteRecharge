@@ -126,7 +126,11 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     // temporary. Control the set point based on the throttle position
-    double setPoint = m_maverick.getRawAxis(JoystickConstants.Axis.Throttle) * ShooterConstants.kMaxRPM;
+    double input = m_maverick.getRawAxis(JoystickConstants.Axis.Throttle);
+    if (Math.abs(input) < ShooterConstants.kDeadzone) { input = 0.0; }
+
+    double setPoint = input * ShooterConstants.kMaxRPM;
+
     m_lPidController.setReference(setPoint, ControlType.kVelocity);
     m_rPidController.setReference(setPoint, ControlType.kVelocity);
 
