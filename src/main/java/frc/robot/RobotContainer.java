@@ -16,9 +16,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.GamePad;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -101,10 +105,10 @@ public class RobotContainer {
 
     // testing... POV buttons
     new POVButton(m_gamePad, 0)
-      .whenPressed(new PrintCommand("Target killed")
+      .whenPressed(new InstantCommand(()->m_shooterSubsystem.stop())
     );
-    new POVButton(m_gamePad, 90).whenPressed(new PrintCommand("POV 90"));
-    new POVButton(m_gamePad, 180).whenPressed(new PrintCommand("POV 180"));
+    new POVButton(m_gamePad, 90).whenPressed(new RunCommand(() -> m_shooterSubsystem.runRPM(200)));
+    new POVButton(m_gamePad, 180).whenHeld(new RunCommand(() -> m_shooterSubsystem.runRPM(300)));
     new POVButton(m_gamePad, 270).whenPressed(new PrintCommand("POV 270"));
 
     // testing... driving to distance via encoders
@@ -181,9 +185,20 @@ public class RobotContainer {
         m_driveSubsystem)
       .withTimeout(0.5);
 
+    Command combinedTest = 
+      new ParallelDeadlineGroup(
+        new WaitCommand(2),
+        new RunCommand(() -> m_shooterSubsystem.runRPM(100)),
+        new SequentialCommandGroup(
+          new WaitCommand(1),
+          new RunCommand(() -> m_cameraSubsystem.lightOn())
+        )
+      );
+    
     m_autonomousChooser.setDefaultOption("Plan C - Distance", planCDistance);
     m_autonomousChooser.addOption("Plan C - Timeout", planCTimeout);
     m_autonomousChooser.addOption("Do Nothing", null);
+    m_autonomousChooser.addOption("Combined", combinedTest);
     SmartDashboard.putData("Autonomous", m_autonomousChooser);
   }
 

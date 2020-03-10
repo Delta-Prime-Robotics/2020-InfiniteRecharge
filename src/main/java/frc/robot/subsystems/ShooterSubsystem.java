@@ -112,31 +112,34 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    
     if (tunePID) {
-      // read PID coefficients from SmartDashboard
-      double p = SmartDashboard.getNumber("Shooter P Gain", 0);
-      double i = SmartDashboard.getNumber("Shooter I Gain", 0);
-      double d = SmartDashboard.getNumber("Shooter D Gain", 0);
-
-      // if PID coefficients on SmartDashboard have changed, write new values to controller
-      if((p != kP)) { m_lPidController.setP(p); kP = p; }
-      if((i != kI)) { m_lPidController.setI(i); kI = i; }
-      if((d != kD)) { m_lPidController.setD(d); kD = d; }
+      adjustPID();
     }
 
     // temporary. Control the set point based on the throttle position
-    double input = m_maverick.getRawAxis(JoystickConstants.Axis.Throttle);
-    if (Math.abs(input) < ShooterConstants.kDeadzone) { input = 0.0; }
+    // double input = m_maverick.getRawAxis(JoystickConstants.Axis.Throttle);
+    // if (Math.abs(input) < ShooterConstants.kDeadzone) { input = 0.0; }
 
-    double setPoint = input * ShooterConstants.kMaxRPM;
+    // double setPoint = input * ShooterConstants.kMaxRPM;
 
-    m_lPidController.setReference(setPoint, ControlType.kVelocity);
-    m_rPidController.setReference(setPoint, ControlType.kVelocity);
+    // m_lPidController.setReference(setPoint, ControlType.kVelocity);
+    // m_rPidController.setReference(setPoint, ControlType.kVelocity);
 
-    SmartDashboard.putNumber("Shooter SetPoint", setPoint);
+    //SmartDashboard.putNumber("Shooter SetPoint", setPoint);
     SmartDashboard.putNumber("Shooter Left Velocity", m_lEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter Right Velocity", m_rEncoder.getVelocity());
+  }
+
+  private void adjustPID() {
+    // read PID coefficients from SmartDashboard
+    double p = SmartDashboard.getNumber("Shooter P Gain", 0);
+    double i = SmartDashboard.getNumber("Shooter I Gain", 0);
+    double d = SmartDashboard.getNumber("Shooter D Gain", 0);
+
+    // if PID coefficients on SmartDashboard have changed, write new values to controller
+    if((p != kP)) { m_lPidController.setP(p); kP = p; }
+    if((i != kI)) { m_lPidController.setI(i); kI = i; }
+    if((d != kD)) { m_lPidController.setD(d); kD = d; }
   }
 
   public void runFullForward() {
