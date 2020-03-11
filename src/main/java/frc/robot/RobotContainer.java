@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelDeadlineGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -49,7 +48,7 @@ public class RobotContainer {
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
   //private final PDPSubsystem m_pdpSubsystem = new PDPSubsystem();
-  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(m_maverick);
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem(); //m_maverick);
   private final MonkeySpiritSubsystem m_monkeySpiritSubsystem = new MonkeySpiritSubsystem();
 
   SendableChooser<Command> m_autonomousChooser = new SendableChooser<>();
@@ -107,8 +106,8 @@ public class RobotContainer {
     new POVButton(m_gamePad, 0)
       .whenPressed(new InstantCommand(()->m_shooterSubsystem.stop())
     );
-    new POVButton(m_gamePad, 90).whenPressed(new RunCommand(() -> m_shooterSubsystem.runRPM(200)));
-    new POVButton(m_gamePad, 180).whenHeld(new RunCommand(() -> m_shooterSubsystem.runRPM(300)));
+    new POVButton(m_gamePad, 90).whenPressed(new InstantCommand(() -> m_shooterSubsystem.setRPM(2000)));
+    new POVButton(m_gamePad, 180).whenPressed(new InstantCommand(() -> m_shooterSubsystem.setRPM(4000)));
     new POVButton(m_gamePad, 270).whenPressed(new PrintCommand("POV 270"));
 
     // testing... driving to distance via encoders
@@ -148,7 +147,7 @@ public class RobotContainer {
     );
     
     m_colorWheelSubsystem.setDefaultCommand(
-      new RunCommand(()->m_colorWheelSubsystem.lightTravel(m_gamePad.getRawAxis(GamePad.Axis.RightStickLeftRight)), 
+      new RunCommand(()->m_colorWheelSubsystem.lightTravel(m_gamePad.getRawAxis(GamePad.Axis.RightStickUpDown)), 
       m_colorWheelSubsystem)
     );
 
@@ -188,7 +187,7 @@ public class RobotContainer {
     Command combinedTest = 
       new ParallelDeadlineGroup(
         new WaitCommand(2),
-        new RunCommand(() -> m_shooterSubsystem.runRPM(100)),
+        new RunCommand(() -> m_shooterSubsystem.setRPM(100)),
         new SequentialCommandGroup(
           new WaitCommand(1),
           new RunCommand(() -> m_cameraSubsystem.lightOn())

@@ -7,7 +7,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -35,17 +34,17 @@ public class ShooterSubsystem extends SubsystemBase {
   private double kP, kI, kD;
 
   // temporary to allow for testing appropriate velocity
-  private Joystick m_maverick;
+  //private Joystick m_maverick;
 
   /**
    * Creates a new ShooterSubsystem.
    */
-  public ShooterSubsystem(Joystick maverick) {
+  public ShooterSubsystem() { //Joystick maverick) {
     m_lMotor = new CANSparkMax(RoboRio.CanIDs.LeftsparkMax, MotorType.kBrushless);
     m_rMotor = new CANSparkMax(RoboRio.CanIDs.RightsparkMax, MotorType.kBrushless);
 
     // temporary. Switch this to buttons calling methods instead.
-    m_maverick = maverick;
+    //m_maverick = maverick;
 
     /**
      * The RestoreFactoryDefaults method can be used to reset the configuration parameters
@@ -147,7 +146,7 @@ public class ShooterSubsystem extends SubsystemBase {
     m_rPidController.setReference(1, ControlType.kDutyCycle);
   }
 
-  public void runRPM(double targetRPM) {
+  public void setRPM(double targetRPM) {
     // Make sure target RPM is below the max RPM in either direction
     targetRPM = Math.min(targetRPM, ShooterConstants.kMaxRPM);      // min return the smaller of the two numbers
     targetRPM = Math.max(targetRPM, -1 * ShooterConstants.kMaxRPM); // max returns the larger of the two numbers
@@ -159,7 +158,9 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void stop() {
-    m_lPidController.setReference(0, ControlType.kDutyCycle);
-    m_rPidController.setReference(0, ControlType.kDutyCycle);
+    SmartDashboard.putNumber("Shooter SetPoint", 0);
+
+    m_lPidController.setReference(0, ControlType.kVoltage);
+    m_rPidController.setReference(0, ControlType.kVoltage);
   }
 }
