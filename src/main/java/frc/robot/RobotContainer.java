@@ -103,11 +103,12 @@ public class RobotContainer {
     );
 
     // testing... POV buttons
-    new POVButton(m_gamePad, 0)
+    new POVButton(m_gamePad, 180)
       .whenPressed(new InstantCommand(()->m_shooterSubsystem.stop())
     );
+    new POVButton(m_gamePad, 0).whenPressed(new InstantCommand(() -> m_shooterSubsystem.setRPM(4000)));
+
     new POVButton(m_gamePad, 90).whenPressed(new InstantCommand(() -> m_shooterSubsystem.setRPM(2000)));
-    new POVButton(m_gamePad, 180).whenPressed(new InstantCommand(() -> m_shooterSubsystem.setRPM(4000)));
     new POVButton(m_gamePad, 270).whenPressed(new PrintCommand("POV 270"));
 
     // testing... driving to distance via encoders
@@ -149,6 +150,11 @@ public class RobotContainer {
     m_colorWheelSubsystem.setDefaultCommand(
       new RunCommand(()->m_colorWheelSubsystem.lightTravel(m_gamePad.getRawAxis(GamePad.Axis.RightStickUpDown)), 
       m_colorWheelSubsystem)
+    );
+
+    m_shooterSubsystem.setDefaultCommand(
+      new RunCommand(() -> m_shooterSubsystem.setByJoystick(m_maverick.getRawAxis(JoystickConstants.Axis.Throttle)),
+      m_shooterSubsystem)
     );
 
     // Used to determine the minimum output needed for the robot to turn

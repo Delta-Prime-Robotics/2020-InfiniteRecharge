@@ -33,18 +33,12 @@ public class ShooterSubsystem extends SubsystemBase {
   private Boolean tunePID = false;
   private double kP, kI, kD;
 
-  // temporary to allow for testing appropriate velocity
-  //private Joystick m_maverick;
-
   /**
    * Creates a new ShooterSubsystem.
    */
-  public ShooterSubsystem() { //Joystick maverick) {
+  public ShooterSubsystem() { 
     m_lMotor = new CANSparkMax(RoboRio.CanIDs.LeftsparkMax, MotorType.kBrushless);
     m_rMotor = new CANSparkMax(RoboRio.CanIDs.RightsparkMax, MotorType.kBrushless);
-
-    // temporary. Switch this to buttons calling methods instead.
-    //m_maverick = maverick;
 
     /**
      * The RestoreFactoryDefaults method can be used to reset the configuration parameters
@@ -115,16 +109,6 @@ public class ShooterSubsystem extends SubsystemBase {
       adjustPID();
     }
 
-    // temporary. Control the set point based on the throttle position
-    // double input = m_maverick.getRawAxis(JoystickConstants.Axis.Throttle);
-    // if (Math.abs(input) < ShooterConstants.kDeadzone) { input = 0.0; }
-
-    // double setPoint = input * ShooterConstants.kMaxRPM;
-
-    // m_lPidController.setReference(setPoint, ControlType.kVelocity);
-    // m_rPidController.setReference(setPoint, ControlType.kVelocity);
-
-    //SmartDashboard.putNumber("Shooter SetPoint", setPoint);
     SmartDashboard.putNumber("Shooter Left Velocity", m_lEncoder.getVelocity());
     SmartDashboard.putNumber("Shooter Right Velocity", m_rEncoder.getVelocity());
   }
@@ -141,9 +125,14 @@ public class ShooterSubsystem extends SubsystemBase {
     if((d != kD)) { m_lPidController.setD(d); kD = d; }
   }
 
-  public void runFullForward() {
-    m_lPidController.setReference(1, ControlType.kDutyCycle);
-    m_rPidController.setReference(1, ControlType.kDutyCycle);
+  public void setByJoystick(double joystickValue) {
+    if (joystickValue > 1) {joystickValue = 1;}
+    if (joystickValue < -1) {joystickValue = -1;}
+    if (Math.abs(joystickValue) < ShooterConstants.kDeadzone) { joystickValue = 0.0; }
+
+    double rpmSetpoint = joystickValue * ShooterConstants.kMaxRPM;
+
+    setRPM(rpmSetpoint);
   }
 
   public void setRPM(double targetRPM) {
