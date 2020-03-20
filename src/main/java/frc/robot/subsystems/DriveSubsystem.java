@@ -31,12 +31,12 @@ import java.util.Map;
 public class DriveSubsystem extends SubsystemBase {
 
   // Make the motor controllers class variables so they show up on LiveWindow
-  private  VictorSP m_rightFrontMotor = new VictorSP(RoboRio.PwmPorts.RightFrontMotor);
-  private  VictorSP m_rightRearMotor  = new VictorSP(RoboRio.PwmPorts.RightRearMotor);      
+  private  VictorSP m_rightFrontMotor = new VictorSP(RoboRio.PwmPort.RightFrontMotor);
+  private  VictorSP m_rightRearMotor  = new VictorSP(RoboRio.PwmPort.RightRearMotor);      
   private  SpeedControllerGroup m_rightGroup = new SpeedControllerGroup(m_rightFrontMotor, m_rightRearMotor);
   
-  private  VictorSP m_leftFrontMotor = new VictorSP(RoboRio.PwmPorts.LeftFrontMotor);
-  private  VictorSP m_leftRearMotor  = new VictorSP(RoboRio.PwmPorts.LeftRearMotor);      
+  private  VictorSP m_leftFrontMotor = new VictorSP(RoboRio.PwmPort.LeftFrontMotor);
+  private  VictorSP m_leftRearMotor  = new VictorSP(RoboRio.PwmPort.LeftRearMotor);      
   private  SpeedControllerGroup m_leftGroup = new SpeedControllerGroup(m_leftFrontMotor, m_leftRearMotor);
 
   private DifferentialDrive m_diffDrive;
@@ -44,12 +44,12 @@ public class DriveSubsystem extends SubsystemBase {
   
 
   // Encoders
-  private Encoder m_leftEncoder = new Encoder(RoboRio.DioPorts.LeftEncoderA, 
-                                              RoboRio.DioPorts.LeftEncoderB, 
+  private Encoder m_leftEncoder = new Encoder(RoboRio.DioPort.LeftEncoderA, 
+                                              RoboRio.DioPort.LeftEncoderB, 
                                               DriveConstants.kLeftEncoderReversed,
                                               EncodingType.k4X);
-  private Encoder m_rightEncoder = new Encoder(RoboRio.DioPorts.RightEncoderA, 
-                                              RoboRio.DioPorts.RightEncoderB, 
+  private Encoder m_rightEncoder = new Encoder(RoboRio.DioPort.RightEncoderA, 
+                                              RoboRio.DioPort.RightEncoderB, 
                                               DriveConstants.kRightEncoderReversed,
                                               EncodingType.k4X);
   

@@ -77,22 +77,22 @@ public class RobotContainer {
     // Drive Straight
     new JoystickButton(m_maverick, 1)
       .whenHeld(new DriveStraightCommand(m_driveSubsystem, 
-        () -> -m_gamePad.getRawAxis(JoystickConstants.Axis.FightFlight)
+        () -> -m_gamePad.getRawAxis(Joystick3D.Axis.FightFlight)
       )
     );
 
     // Reset drive system encoders
-    new JoystickButton(m_gamePad, GamePad.Buttons.RB)
+    new JoystickButton(m_gamePad, GamePad.Button.RB)
       .whenPressed(() -> m_driveSubsystem.resetEncoders()
     );
 
     // Reset drive system gyro
-    new JoystickButton(m_gamePad, GamePad.Buttons.LB)
+    new JoystickButton(m_gamePad, GamePad.Button.LB)
       .whenPressed(() -> m_driveSubsystem.zeroHeading()
     );
 
     // Auto-Aim
-    new JoystickButton(m_gamePad, GamePad.Buttons.B)
+    new JoystickButton(m_gamePad, GamePad.Button.B)
       .whenPressed(new AutoAimCommand(m_driveSubsystem, m_cameraSubsystem)
       .withTimeout(3)
     );
@@ -112,18 +112,18 @@ public class RobotContainer {
     new POVButton(m_gamePad, 270).whenPressed(new PrintCommand("POV 270"));
 
     // testing... driving to distance via encoders
-    new JoystickButton(m_gamePad, GamePad.Buttons.Start)
+    new JoystickButton(m_gamePad, GamePad.Button.Start)
       .whenPressed(new DriveNoHandsCommand(m_driveSubsystem, 30)
       .withTimeout(0.5)
     );
 
     // Run the climber
-    new JoystickButton(m_gamePad, GamePad.Buttons.A)
+    new JoystickButton(m_gamePad, GamePad.Button.A)
       .whenHeld(new RunCommand(() -> m_monkeySpiritSubsystem.Climb(), m_monkeySpiritSubsystem)
     );
 
     // Reset the counter for the color wheel
-    new JoystickButton(m_gamePad, GamePad.Buttons.X)
+    new JoystickButton(m_gamePad, GamePad.Button.X)
       .whenPressed(new InstantCommand(() -> m_colorWheelSubsystem.startCounting())
     );
   }
@@ -138,8 +138,8 @@ public class RobotContainer {
     // Set Arcade Drive as the default
     m_driveSubsystem.setDefaultCommand(
       new ArcadeDriveCommand(m_driveSubsystem,
-      () -> -m_maverick.getRawAxis(JoystickConstants.Axis.FightFlight),
-      () -> m_maverick.getRawAxis(JoystickConstants.Axis.TurnNeck))
+      () -> -m_maverick.getRawAxis(Joystick3D.Axis.FightFlight),
+      () -> m_maverick.getRawAxis(Joystick3D.Axis.TurnNeck))
     );
 
     m_intakeSubsystem.setDefaultCommand(
@@ -153,7 +153,7 @@ public class RobotContainer {
     );
 
     m_shooterSubsystem.setDefaultCommand(
-      new RunCommand(() -> m_shooterSubsystem.setByJoystick(m_maverick.getRawAxis(JoystickConstants.Axis.Throttle)),
+      new RunCommand(() -> m_shooterSubsystem.setByJoystick(m_maverick.getRawAxis(Joystick3D.Axis.Throttle)),
       m_shooterSubsystem)
     );
 

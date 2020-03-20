@@ -10,7 +10,7 @@ package frc.robot;
 public final class Constants {
     // Connections to the RoboRio
     public static final class RoboRio {
-        public final class PwmPorts {
+        public final class PwmPort {
             public static final int RightRearMotor = 0;
             public static final int RightFrontMotor = 1;
             public static final int LeftRearMotor = 2;
@@ -21,13 +21,13 @@ public final class Constants {
 
             public static final int ClimberMotor = 6;
         }
-        public final class DioPorts {
+        public final class DioPort {
             public static final int RightEncoderA = 0;
             public static final int RightEncoderB = 1;
             public static final int LeftEncoderA = 2;
             public static final int LeftEncoderB = 3;
         }
-        public final class CanIDs {
+        public final class CanID {
             public static final int LeftsparkMax = 11;
             public static final int RightsparkMax = 12;
             public static final int PCM = 0;
@@ -50,7 +50,7 @@ public final class Constants {
             public static final int RightStickLeftRight = 2;
             public static final int RightStickUpDown = 3;
         }
-        public final class Buttons {
+        public final class Button {
             public static final int X = 1;
             public static final int A = 2;
             public static final int B = 3;
@@ -67,7 +67,7 @@ public final class Constants {
     }
 
     // 3D Joystick
-    public static final class JoystickConstants{
+    public static final class Joystick3D{
         public final class Axis {
             public static final int LeftRight = 0;
             public static final int FightFlight = 1;

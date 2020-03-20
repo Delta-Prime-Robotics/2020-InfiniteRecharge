@@ -37,8 +37,8 @@ public class ShooterSubsystem extends SubsystemBase {
    * Creates a new ShooterSubsystem.
    */
   public ShooterSubsystem() { 
-    m_lMotor = new CANSparkMax(RoboRio.CanIDs.LeftsparkMax, MotorType.kBrushless);
-    m_rMotor = new CANSparkMax(RoboRio.CanIDs.RightsparkMax, MotorType.kBrushless);
+    m_lMotor = new CANSparkMax(RoboRio.CanID.LeftsparkMax, MotorType.kBrushless);
+    m_rMotor = new CANSparkMax(RoboRio.CanID.RightsparkMax, MotorType.kBrushless);
 
     /**
      * The RestoreFactoryDefaults method can be used to reset the configuration parameters
