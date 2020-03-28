@@ -103,11 +103,11 @@ public class RobotContainer {
     );
 
     // testing... POV buttons
-    new POVButton(m_gamePad, 0)
+    new POVButton(m_gamePad, 180)
       .whenPressed(new InstantCommand(()->m_shooterSubsystem.stop())
     );
     new POVButton(m_gamePad, 90).whenPressed(new InstantCommand(() -> m_shooterSubsystem.setRPM(2000)));
-    new POVButton(m_gamePad, 180).whenPressed(new InstantCommand(() -> m_shooterSubsystem.setRPM(4000)));
+    new POVButton(m_gamePad, 0).whenPressed(new InstantCommand(() -> m_shooterSubsystem.setRPM(4000)));
     new POVButton(m_gamePad, 270).whenPressed(new PrintCommand("POV 270"));
 
     // testing... driving to distance via encoders
@@ -179,20 +179,24 @@ public class RobotContainer {
       .withTimeout(0.5);
 
     Command planCTimeout = new StartEndCommand(
-        () -> m_driveSubsystem.arcadeDrive(-0.4, 0), 
+        () -> m_driveSubsystem.arcadeDrive(-0.6, 0), 
         () -> m_driveSubsystem.stop(),
         m_driveSubsystem)
-      .withTimeout(0.5);
+      .withTimeout(1.0);
 
     Command combinedTest = 
-      new ParallelDeadlineGroup(
-        new WaitCommand(2),
-        new RunCommand(() -> m_shooterSubsystem.setRPM(100)),
-        new SequentialCommandGroup(
-          new WaitCommand(1),
-          new RunCommand(() -> m_cameraSubsystem.lightOn())
-        )
-      );
+      new SequentialCommandGroup(
+        new ParallelDeadlineGroup(
+          new WaitCommand(4),
+          new RunCommand(() -> m_shooterSubsystem.setRPM(400)),
+          new SequentialCommandGroup(
+            new WaitCommand(3),
+            new InstantCommand(() -> m_cameraSubsystem.lightOn())
+          )
+        ),
+        new InstantCommand(() -> m_shooterSubsystem.stop()),
+        new InstantCommand(() -> m_cameraSubsystem.lightOff())
+      )      ;
     
     m_autonomousChooser.setDefaultOption("Plan C - Distance", planCDistance);
     m_autonomousChooser.addOption("Plan C - Timeout", planCTimeout);

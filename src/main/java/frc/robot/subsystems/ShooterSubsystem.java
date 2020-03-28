@@ -54,7 +54,7 @@ public class ShooterSubsystem extends SubsystemBase {
     m_lMotor.restoreFactoryDefaults();
     m_rMotor.restoreFactoryDefaults();
 
-    m_rMotor.setInverted(true);
+    m_lMotor.setInverted(true);
 
     setUpPID();
   }
@@ -147,6 +147,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setRPM(double targetRPM) {
+
     // Make sure target RPM is below the max RPM in either direction
     targetRPM = Math.min(targetRPM, ShooterConstants.kMaxRPM);      // min return the smaller of the two numbers
     targetRPM = Math.max(targetRPM, -1 * ShooterConstants.kMaxRPM); // max returns the larger of the two numbers

@@ -35,7 +35,7 @@ public class CameraSubsystemRPi extends SubsystemBase {
    */
   public CameraSubsystemRPi() {
     try {
-      m_intakeCam = CameraServer.getInstance().startAutomaticCapture("SpineCam", 0);
+      //m_intakeCam = CameraServer.getInstance().startAutomaticCapture("SpineCam", 0);
       //m_intakeCam.setResolution(VisionConstants.kImageWidth, VisionConstants.kImageHeight);
     }
     catch (Exception ex) {
