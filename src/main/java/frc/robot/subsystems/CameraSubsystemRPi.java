@@ -28,7 +28,7 @@ public class CameraSubsystemRPi extends SubsystemBase {
 
   private NetworkTable m_piData;
 
-  private Solenoid m_lightSwitch = new Solenoid(RoboRio.CanIDs.PCM, VisionConstants.kLightSwitch);
+  private Solenoid m_lightSwitch = new Solenoid(RoboRio.CanID.PCM, VisionConstants.kLightSwitch);
 
   /**
    * Creates a new CameraSubsystem.

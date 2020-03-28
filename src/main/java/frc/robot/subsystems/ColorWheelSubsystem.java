@@ -22,7 +22,7 @@ import com.revrobotics.ColorSensorV3;
 
 public class ColorWheelSubsystem extends SubsystemBase {
 
-  private  VictorSP m_controlPanelMotor  = new VictorSP(RoboRio.PwmPorts.ControlPanelMotor);
+  private  VictorSP m_controlPanelMotor  = new VictorSP(RoboRio.PwmPort.ControlPanelMotor);
   /**
    * A Rev Color Sensor V3 object is constructed with an I2C port as a parameter. 
    * The device will be automatically initialized with default parameters.

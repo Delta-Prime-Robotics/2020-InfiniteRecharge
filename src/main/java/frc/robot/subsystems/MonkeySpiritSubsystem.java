@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.*;
 
 public class MonkeySpiritSubsystem extends SubsystemBase {
-  private VictorSP m_motor = new VictorSP(RoboRio.PwmPorts.ClimberMotor);
+  private VictorSP m_motor = new VictorSP(RoboRio.PwmPort.ClimberMotor);
   
   /**
    * Creates a new MonkeySpiritSubsystem.
